@@ -8,7 +8,6 @@ $("#demo-form2").on("submit",function(e){
         }
         else{
         	var datos=$(this).serialize();
-        //alert(datos);
 	          $.ajax({
 	              type:"POST",
 	              url:"/consuta_por_fecha_ingresos/",
@@ -54,26 +53,25 @@ $( function() {
 		 showMonthAfterYear: false,
 		 yearSuffix: ''
     });
-  } );
+  });
 
 function InprimirIngreso(){
-  var inicio = $("#ini").val();
-  var fin = $("#fin").val();
-  var user = $("#user").val();//proveedores
-  var usuario = $("#usuario").val();//usuarios
-  if(inicio=='' || fin =='' || !isNaN(inicio) || !isNaN(fin) ){
-    alert("Por favor Ingrese la fecha correctamente.");
-    $("#ini").focus();
-    return false
-  }
-  else{
-    
-    var ii =inicio.split('/');//la conveti en un array
-    var a = ii[0]+"-"+ii[1]+"-"+ii[2];
-    var ff = fin.split('/')
-    var b = ff[0]+"-"+ff[1]+"-"+ff[2];
-    window.open("/ReportesIngresos/"+usuario+"/"+user+"/"+a+"/"+b+"/");
-  }
+	  var inicio = $("#ini").val();
+	  var fin = $("#fin").val();
+	  var user = $("#user").val();//proveedores
+	  var usuario = $("#usuario").val();//usuarios
+	  if(inicio=='' || fin =='' || !isNaN(inicio) || !isNaN(fin) ){
+	    alert("Por favor Ingrese la fecha correctamente.");
+	    $("#ini").focus();
+	    return false
+	  }
+	  else{
+	    var ii =inicio.split('/');//la conveti en un array
+	    var a = ii[0]+"-"+ii[1]+"-"+ii[2];
+	    var ff = fin.split('/');
+	    var b = ff[0]+"-"+ff[1]+"-"+ff[2];
+	    window.open("/ReportesIngresos/"+usuario+"/"+user+"/"+a+"/"+b+"/");
+	  }
 }
 </script>
  <form method="POST" role="form" id="demo-form2" data-parsley-validate class="form-horizontal form-label-left" >{% csrf_token %}
@@ -113,6 +111,4 @@ function InprimirIngreso(){
 	        <a type="button" onclick="InprimirIngreso()" class="btn btn-warning">Imprimir</a>
 	      </div>
 	    </div>
-	<!--     <a href="#" button type="button" onclick="InprimirIngreso()"class="btn btn-default">Imprimir
- </a> -->
 	</form>	
