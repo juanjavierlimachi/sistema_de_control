@@ -1,0 +1,58 @@
+{% load bootstrap %}
+<div class="table-responsive">
+    <p>
+<strong>{{producto.Nombre_producto|upper}}</strong> Unidad: {{producto.Unidad}}- Stock:  {{producto.Stock}} PRECIO DE VENTA: {{producto.Precio_venta}}
+    </p>
+	<form method="POST" role="form" id="demo-form2" data-parsley-validate class="form-horizontal form-label-left" >
+    {% csrf_token %}
+              {{forms|bootstrap_horizontal}}
+    <div class="form-group">
+      <div class="col-sm-10 col-sm-offset-2">
+        <button type="submit" class="btn btn-primary">Registrar</button>
+      </div>
+    </div>
+  </form>
+</div>
+<script type="text/javascript">
+    $('.table-responsive #demo-form2').submit(function(e){
+        e.preventDefault();
+        var dato=$(this).serialize();
+        $.ajax({
+            type:'POST',
+            url:'/ingresa_productos/'+{{producto.id}}+'/'+{{ids}}+'/',
+            data:dato,
+            success:function(resp){
+                $("#exampleModal .modal-title").text("");
+                $(".modal-body").html(resp);
+                //aqui agregar la url:NewOrden_detalle/id
+                $.ajax({
+                    type:'GET',
+                    url:'/NewOrden_detalle/'+{{ids}}+'/',
+                    success:function(res){
+                        $('.x_content').html(res);
+                    }
+                });
+            }
+        });
+    });
+
+$( function() {
+    $("#id_fecha_de_vencimiento").attr('autocomplete','off');
+    $( "#id_fecha_de_vencimiento" ).datepicker({
+        prevText: '<Ant',
+         nextText: 'Sig>',
+         currentText: 'Hoy',
+         monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+         monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+         dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+         dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
+         dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sá'],
+         weekHeader: 'Sm',
+         dateFormat: 'dd/mm/yy',
+         firstDay: 1,
+         isRTL: false,
+         showMonthAfterYear: false,
+         yearSuffix: ''
+    });
+  } );
+</script>

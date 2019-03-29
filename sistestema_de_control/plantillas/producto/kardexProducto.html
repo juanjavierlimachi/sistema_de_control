@@ -1,0 +1,84 @@
+<script type="text/javascript">
+function EditProducto(ids){
+	$("#exampleModal .modal-title").text("Editar los datos del producto");
+        $.ajax({
+            type:'GET',
+            url:'/EditProducto/'+ids+'/',
+            success:function(resp){
+                $(".modal-body").html(resp);
+                
+            }
+        });
+}
+function dar_baja(ids){
+	$("#exampleModal .modal-title").text("Dar de baja este producto");
+        $.ajax({
+            type:'GET',
+            url:'/dar_baja_producto/'+ids+'/',
+            success:function(resp){
+                $(".modal-body").html(resp);
+                
+            }
+        });
+}
+function dar_alta(ids){
+	$("#exampleModal .modal-title").text("Recuperar la información");
+        $.ajax({
+            type:'GET',
+            url:'/dar_alta/'+ids+'/',
+            success:function(resp){
+                $(".modal-body").html(resp);
+                
+            }
+        });
+}
+</script>
+<div class="btn-group">
+<div class="table-responsive">
+{% if user.is_active or user.is_superuser %}
+		{% if dato.estado %}
+		<button title="Editar la información" onclick="EditProducto({{dato.id}})" class="btn btn-success" data-toggle="modal" data-target="#exampleModal"></span>Editar el producto</button>
+		<button title="Dar Baja" onclick="dar_baja({{dato.id}})" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal">Eliminar Producto</button>
+
+		<button title="Dar Alta" onclick="RegitrarBaja({{dato.id}})" class="btn btn-warning" data-toggle="modal" data-target="#exampleModal">Registrar Devolución</button>
+		{% else %}
+		<button title="Dar Alta" onclick="dar_alta({{dato.id}})" class="btn btn-warning" data-toggle="modal" data-target="#exampleModal">Recuperar Producto</button>
+		{% endif %}
+	
+  	{% endif %}
+</div>
+</div>
+<div class="table-responsive">
+<table class="table table-hover table-striped">
+	<tr class="success"><td align="center" colspan="9"> Kardex Valorado Producto:   {{dato.Nombre_producto|upper}}</td></tr>
+	<tr>
+		<td colspan="2"><br>Precio de Venta: {{dato.Precio_venta}}</td>
+		<td><br>Precio Compra: {{dato.Precio_compra}}</td>
+		<td><br>Stock en almacen: {{dato.Stock}}</td>
+		<td colspan="2"><br>Valor en Bs: {{valor}}</td>
+		<td colspan="2"><br>Registrado Por: {{dato.Usuario.get_full_name|upper}}</td>
+	</tr>
+	<tr>
+		<td colspan="3"><br>Categoria: {{dato.Categoria.Nombre_categoria|upper}}</td>
+		<td colspan="4"><br>Fecha de Registro: {{dato.fecha_registro|date:"d-m-Y"}}</td>
+		<td colspan="2"><br>Estado:  {% if dato.estado %}
+				Activo
+			{% else %}
+				Baja
+			{% endif %}</td>
+	</tr>
+
+		<tr>
+			<td colspan="4"><br>Total salidas del producto en el mes:{{salidas}} </td>
+			<td colspan="5"><br>Valor Bs:  {{bs}} </td>
+		</tr>
+		<tr>
+			<td colspan="4"><br>Total ingresos del producto en el mes:{{Total_ingresos}} </td>
+			<td colspan="5"><br>Valor Bs. {{bsi}} </td>
+		</tr>
+
+	
+</table>
+<div class="ok">
+</div>
+</div>

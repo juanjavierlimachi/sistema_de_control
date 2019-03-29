@@ -1,0 +1,41 @@
+<div class="table-responsive">
+<h4 colspan="8" align="center">INVENTARIO DE PRODUCTOS REGISTRADOS</h4>
+<table class="table table-hover table-striped table-bordered dt-responsive datatable" border="1" style="font-size: 12px;">
+<thead>
+	<th><br>PRODUCTO</th>
+	<th><br>UNIDAD</th>
+	<th><br>VENTA</th>
+	{% if user.is_superuser %}
+	<th><br>COMPRA</th>
+	{% endif %}
+	<th><br>CATEGORIA</th>
+	<th style="width: 50px;" align="center"><br>STOCK</th>
+	<th><br>ESTADO</th>
+</thead>
+{% for i in datos %}
+		<tr>
+			<td align="center"><br>{{i.Nombre_producto|upper}}</td>
+			<td align="center"><br>{{i.Unidad|upper}}</td>
+			<td align="center"><br>{{i.Precio_venta}}</td>
+			{% if user.is_superuser %}
+			<td align="center"><br>{{i.Precio_compra}}</td>
+			{% endif %}
+			<td align="center"><br>{{i.Categoria.Nombre_categoria|upper}}</td>
+			{% if i.Stock <= 10 %}
+			<td align="center"><br>{{i.Stock}}</td>
+			{% else %}
+			<td align="center"><br>{{i.Stock}}</td>
+			{% endif %}
+			<td align="center"><br>
+				{% if i.estado %}
+				Alta
+				{% else %}
+				Baja
+				{% endif %}
+			</td>
+			
+		</tr>
+{% endfor %}
+<tr> <td colspan="2"><br><strong>Total Registros: </strong> {{total}}</td> </tr>
+</table>
+</div>

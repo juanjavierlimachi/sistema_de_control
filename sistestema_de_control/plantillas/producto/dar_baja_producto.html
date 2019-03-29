@@ -1,0 +1,24 @@
+<div class="table-responsive">
+	<li>Está seguro de eliminar la información: <strong>{{dato.Nombre_producto}}</strong>?
+		<a href="#" onclick="Eliminar_producto({{dato.id}})" class="btn btn-danger">Confirmar</a>
+	</li>
+</div>
+<script type="text/javascript">
+function Eliminar_producto(ids){
+	$.ajax({
+	  	type:"GET",
+	  	url:"/Eliminar_producto/"+ids+"/",
+	  	success:function(resp){
+	  		$(".modal-body").html(resp);
+	  		$.ajax({
+				type:'GET',
+				url:'/kardex/'+{{dato.id}}+'/',
+				success:function(res){
+					$('.x_content').html(res);
+				}
+			});
+	  	}
+	  });
+}
+
+</script>

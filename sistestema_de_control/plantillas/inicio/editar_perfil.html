@@ -1,0 +1,45 @@
+{% load bootstrap %}
+<style type="text/css">
+.helptext {display: none;}
+</style>
+<script type="text/javascript">
+$('#demo-form2').submit(function(e){
+		e.preventDefault();
+		var dato=$(this).serialize();
+		console.log(dato);
+		$.ajax({
+			type:'POST',
+			url:'/editarperfil/',
+			data: dato,
+			success:function(resp){
+				console.log(resp);
+				$('.x_content').html(resp);
+			}
+		});
+	});
+</script>
+<div class="card">
+<form  method="POST" role="form" id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">{% csrf_token %}
+	<legend>Actualizar mi información</legend>
+  {{ user_form|bootstrap_horizontal}}
+    {{ perfil_form|bootstrap_horizontal}}
+   <div class="form-group">
+      <div class="col-sm-10 col-sm-offset-2">
+        <button type="submit" class="btn btn-primary" onsubmit='verificar()'>Actualizar</button>
+        <a class="btn btn-default" href="#" onclick="Passwordd()">Cambiar Contraseña</a>
+      </div>
+    </div>
+  
+</form>
+</div>
+<script type="text/javascript">
+function Passwordd(){
+	$.ajax({
+		type:"GET",
+		url:"/editarcontracenia/",
+		success:function(resp){
+			$(".x_content").html(resp);
+		}
+	});
+}
+</script>

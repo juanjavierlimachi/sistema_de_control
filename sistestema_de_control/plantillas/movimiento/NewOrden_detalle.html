@@ -1,0 +1,132 @@
+<script type="text/javascript">
+function IngresoProducto(ids){
+	$("#exampleModal .modal-title").text("Busque el producto para realizar el ingreso.");
+	$.ajax({
+		type:'GET',
+		url:'/buscar_producto/',
+		data:{'ids':ids},
+		success:function(res){
+			$('.modal-body').html(res);
+		}
+	});
+}
+function EditCompra(ids){
+	$("#exampleModal .modal-title").text("Editar los datos primarios de la compra");
+	$.ajax({
+		type:'GET',
+		url:'/EditCompra/'+ids+'/',
+		success:function(res){
+			$('.modal-body').html(res);
+		}
+	});
+}
+function EditarProductosDeCompra(ids){
+	$("#exampleModal .modal-title").text("Editar el ingreso");
+	$.ajax({
+		type:'GET',
+		url:'/EditarProductosDeCompra/'+ids+'/',
+		success:function(res){
+			$('.modal-body').html(res);
+		}
+	});
+}
+function EliminarProductosDeCompra(ids){
+	$("#exampleModal .modal-title").text("Eliminar este ingreso de la lista");
+	$.ajax({
+		type:'GET',
+		url:'/EliminarProductosDeCompra/'+ids+'/',
+		success:function(res){
+			$('.modal-body').html(res);
+		}
+	});
+}
+function EliminarCompra(ids){
+	$("#exampleModal .modal-title").text("Eliminar toda la compra");
+	$.ajax({
+		type:'GET',
+		url:'/EliminarCompra/'+ids+'/',
+		success:function(res){
+			$('.modal-body').html(res);
+		}
+	});
+}
+</script>
+<div class="btn-group">
+<button class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" 
+  		onclick="IngresoProducto({{dato.id}})"><span class="fa fa-database">
+  			Ingresar los productos para este nro. de compra
+  		</span></button>
+ <button class="btn btn-warning" data-toggle="modal" data-target="#exampleModal" 
+  		onclick="EditCompra({{dato.id}})"><span class="fa fa-database">
+  			Editar el Nro de la compra
+  		</span></button>
+ <button class="btn btn-danger" data-toggle="modal" data-target="#exampleModal" 
+  		onclick="EliminarCompra({{dato.id}})"><span class="fa fa-database">
+  			Eliminar toda la compra
+  		</span></button>
+
+</div>
+<div class="table-responsive">
+<table class="table table-hover table-striped">
+	<tr class="success"><td align="center" colspan="5"> DETALLES DE LA COMPRA NRO:  <strong>{{dato.Nro_de_Compra}}</strong></td></tr>
+	<tr>
+		<td colspan="2">RESPONSABLE: {{dato.Responsable|upper}}</td>
+		<td>PROVEEDOR: {{dato.proveedor|upper}}</td>
+		<td colspan="2">Registrado Por: {{dato.Usuario.get_full_name|upper}}</td>
+	</tr>	
+	<tr>
+		<td colspan="4">Fecha de la compra: {{dato.fecha_registro|date}}</td>
+	</tr>
+	<tr>
+		<td colspan="4">CORTESIA:  {{dato.Cortesia}}</td>
+	</tr>
+</table>
+</div>
+<!-- lista de ingresos de productos para la compra -->
+<div class="table-responsive">
+<table class="table table-hover table-striped" id="table-ingresos">
+	<tr><td colspan="10" align="center">LISTA DE PRODUCTOS COMPRADOS</td></tr>
+<tr class="success">
+	<td>PRODUCTO</td>
+	<td>CANTIDAD</td>
+	<td>PREC. UNI.</td>
+	<td>TOTAL</td>
+	<td>FECHA VENC.</td>
+	<td>FECHA REG.</td>
+	<td></td>
+</tr>
+{% for i in dato.ingreso.all %}
+		<tr>
+			<td>{{i.producto.Nombre_producto|upper}}</td>
+			<td>{{i.cantidad}}</td>
+			<td>{{i.Precio_unidad}}</td>
+			<td>{{i.total}}</td>
+			<td>{{i.fecha_de_vencimiento}}</td>
+			<td>{{i.fecha_registro|date:"d-m-Y"}}</td>
+			<td>
+				<div class="btn-group">
+                    <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle btn-sm" type="button" aria-expanded="false">Opciones <span class="caret"></span>
+                    </button>
+                    <ul role="menu" class="dropdown-menu">
+                    {% if i.estado %}
+                      <li><a href="#" onclick="EditarProductosDeCompra({{i.id}})" data-toggle="modal" data-target="#exampleModal">Editar</a></li>
+                      <li><a href="#" onclick="EliminarProductosDeCompra({{i.id}})" data-toggle="modal" data-target="#exampleModal">Eliminar</a></li> 
+                      
+                      {% endif %}
+                    </ul>
+                  </div>
+             </td>
+		</tr>
+{% endfor %}
+<tr>
+ <td>Total:<strong>{{total}} </strong></td>
+		<td><strong>{{dato.Total_paquetes}}</strong></td>
+		<td></td>
+		<td><strong>{{dato.Total_sin_descuento}}</strong></td>
+ </tr>
+ <tr>
+<td>Descuento 18%: </td><td><strong>{{dato.descuento}}</strong></td>
+<td>Total a cancelar: </td><td><strong>{{dato.toto_pago}}</strong></td>
+ </tr>
+</table>
+</div>

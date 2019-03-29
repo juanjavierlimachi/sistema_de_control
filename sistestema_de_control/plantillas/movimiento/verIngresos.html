@@ -1,0 +1,89 @@
+<style type="text/css">
+#controles{left: 30px}
+#controles select{margin: inherit;}
+#controles form{width: 800px;float: left;margin-left:  0px;}
+#controles form input{width: 20%;float: left;}
+</style>
+<script type="text/javascript">
+$("#Busqueda").on("submit",function(e){
+        e.preventDefault();
+        var inicio = $("#ini").val();
+        var fin = $("#fin").val();
+        if (Date.parse(inicio)> Date.parse(fin)){
+        	alert("Error: la fecha inicio de deve ser maryor a la fecha final");
+        }
+        else{
+        	var datos=$(this).serialize();
+        //alert(datos);
+	          $.ajax({
+	              type:"POST",
+	              url:"/consuta_ingresos_por_proveedor/",
+	              data:datos,
+	              success:function(resp){
+	                $(".table-responsive").fadeIn("slow");
+	                $(".table-responsive").html(resp);
+	              }
+	          });
+         }
+      });
+function NewOrden_detalle(ids){
+	$.ajax({
+		type:'GET',
+		url:'/NewOrden_detalle/'+ids+'/',
+		beforeSend:Espera,
+		success:function(res){
+			$('.x_content').html(res);
+		}
+	});
+}
+</script>
+<div id="controles">
+  <div class="btn-group">
+  <form method="POST" id="Busqueda" role="form">{% csrf_token %}
+      <input type="text" name="inicio" id="ini" placeholder="(Desde) DD/MM/AA" class="form-control" required />
+      <input type="text" name="final" id="fin" placeholder="(Hasta) DD/MM/AA" class="form-control" required />
+      <div class="form-group">
+	    <select name="proveedor" id="id_proveedores" class="form-control" required>
+	    	<option value="0">TODOS LOS PROVEEDORES</option>
+	    	{% for i in proveedores %}
+	    	<option value="{{i.id}}">{{i.Nombre_Razon_Social|upper}}</option>
+	    	{% endfor %}
+	    </select>
+	    <button class="btn btn-success">Consultar</button>
+      <a href="#" button type="button" onclick="InprimirIngreso()"class="btn btn-default">Imprimir</a>
+	   </div>
+  </form>
+  </div>
+</div>
+
+<div class="table-responsive">
+<table class="table table-hover table-striped" id="table-ingresos">
+	<tr><td colspan="10" align="center">PLANILLA DE COMPRAS</td></tr>
+<tr class="success">
+	<td>PRODUCTO</td>
+	<td>CANTIDAD</td>
+	<td>PREC. UNI.</td>
+	<td>TOTAL</td>
+	<td>FECHA VENC.</td>
+	<td>FECHA REG.</td>
+	<td>NRO.</td>
+</tr>
+{% for i in datos %}
+		<tr>
+			<td>{{i.producto.Nombre_producto|upper}}</td>
+			<td>{{i.cantidad}}</td>
+			<td>{{i.Precio_unidad}}</td>
+			<td>{{i.total}}</td>
+			<td>{{i.fecha_de_vencimiento}}</td>
+			<td>{{i.fecha_registro|date}}</td>
+			<td>
+				<a href="#" onclick="NewOrden_detalle({{i.Nro_de_Compra.id}})" title="Ir a detalles">
+					{{i.Nro_de_Compra|upper}}
+				</a>
+			</td>
+		</tr>
+{% endfor %}
+<tr> <td colspan="2"><strong>Total Registros: </strong> {{total}}</td> </tr>
+</table>
+</div>
+

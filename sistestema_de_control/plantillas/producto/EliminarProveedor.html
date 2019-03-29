@@ -1,0 +1,17 @@
+<div class="table-responsive">
+	<li>Está seguro de eliminar la información: <strong>{{dato.Nombre_Razon_Social|upper}}</strong>?
+		<a href="#" onclick="Eliminar_Proveedor({{dato.id}})" class="btn btn-danger">Confirmar</a>
+	</li>
+</div>
+<script type="text/javascript">
+function Eliminar_Proveedor(ids){
+	$.ajax({
+	  	type:"GET",
+	  	url:"/Eliminar_Proveedor/"+ids+"/",
+	  	success:function(resp){
+	  		$(".modal-body").html(resp);
+	  		VerProveedores();
+	  	}
+	});
+}
+</script>

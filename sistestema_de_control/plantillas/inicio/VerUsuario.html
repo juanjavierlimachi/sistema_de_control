@@ -1,0 +1,67 @@
+<div class="table-responsive">
+<table class="table table-hover table-striped">
+<tr><td>Nombre de Usuario: <strong>{{user.username}}</strong></td></tr>
+<tr><td>Nombre completo:<strong>{{user.get_full_name|upper}}</strong></td></tr>
+<tr><td>Ultimaves que ingreso al sistema hace: <strong>{{user.last_login|timesince}}</strong></td></tr>
+<tr><td>Estado:{% if user.is_active %}
+        <span><img src="/static/img/icon_success.gif"></span>
+        <form method='GET' id='form'>{% csrf_token %}
+                        <input type='hidden' id='nombre' value='{{user.username}}' required/>
+                        <input type='checkbox' name='staff' id='staff' required/>
+                        <button id='userr'>Deshabilitar cuenta</button>
+        </form>
+    {% else %} 
+        <span><img src="/static/img/icon_error.gif"></span>
+          <form method='GET' id='formu'>{% csrf_token %}
+                        <input type='hidden' id='nombre' value='{{user.username}}'>
+                        <select name="op" id="op">    
+                            <option value="ins">Habilitar como personal de Almacenes </option>
+                            <option value="sp">Habilitar como personal Administración</option>
+                            <option value="ca">Habilitar como Chofer / Ayudante</option>
+                            <option value="otros">Otros (Solo podra visualizar la información) </option>
+                        </select>   
+                        <button id='avilitar'>Habilitar cuenta</button>
+          </form>
+          </td></tr>
+     {% endif %}
+</table>
+<p id="respEs"></p>
+<script type="text/javascript">
+$('#form').submit(Desactivar);//Al enviar el formulario con el id "form" con datos, se activa la funcion Desactivar
+   function Desactivar(e){
+    e.preventDefault();
+     var datos={
+        'nombre':$('#nombre').val(),
+        'staff':$('#staff:checked').val()
+    }
+    console.log(datos);
+    $.ajax({
+        type:'get',
+        url:'/DasactivarUser/',
+        data:datos,
+        success:function(resp){
+            $('#respEs').html(resp);
+            DatosUser();
+        }
+    });
+   }
+$("#formu").submit(Havilitar);
+function Havilitar(e){
+    e.preventDefault();
+    var datos={
+        'nombre':$('#nombre').val(),
+        'op':$('#op').val()
+    }
+    //var datos=$(this).serialize();
+    console.log(datos);
+    $.ajax({
+        type:'get',
+        url:'/VolverHavilitar/',
+        data:datos,
+        success:function(resp){
+            $('#respEs').html(resp);
+            DatosUser();
+        }
+    });
+}
+</script>

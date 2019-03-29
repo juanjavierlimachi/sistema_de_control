@@ -1,0 +1,39 @@
+{% load bootstrap %}
+{% if user.is_authenticated and user.is_staff %}
+<script type="text/javascript">
+$("#demo-form2").submit(function(e){
+		e.preventDefault();
+		var dato=$(this).serialize();
+		//alert(dato);
+		$.ajax({
+			type:"POST",
+			url:"/editarcontracenia/",
+			data: dato,
+			success:function(resp){
+				//alert(resp);
+				window.location='/'
+			}
+		});
+	});
+</script>
+<div class="card">
+<form method="POST" role="form" id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">{% csrf_token %}
+	<legend><strong>Cambiar Contraseña</strong> (Nota: al cambiar tu contraseña deveras ingresar al sistema nuevamente.)</legend>
+	{{forms|bootstrap_horizontal}}
+	<div class="form-group">
+      <div class="col-sm-10 col-sm-offset-2">
+        <button class="btn btn-warning">Cambiar contraseña</button>
+      </div>
+    </div>
+</form>
+</div>
+{% else %}
+<script type="text/javascript">
+$(document).ready(function(){
+    alert(window.location='/')
+});
+</script>
+<style type="text/css">
+html{display: none;}
+</style>
+{% endif %}

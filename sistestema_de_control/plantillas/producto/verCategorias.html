@@ -1,0 +1,87 @@
+<div id="controles">
+  <div class="btn-group">
+  		<button class="btn btn-success" data-toggle="modal" data-target="#exampleModal" 
+  		onclick="NewCategoria()"><span class="fa fa-database">
+  			Crear nueva categoria
+  		</span></button>
+  </div>
+</div>
+<div class="table-responsive">
+<table class="table table-hover table-striped">
+	<tr><td colspan="5" align="center">CATEGORIAS REGISTRADOS</td></tr>
+<tr class="success">
+	<td>NOMBRE CATEGORIA</td>
+	<td>FECHA DE REGISTRO</td>
+  <td>ESTADO</td>
+  <td></td>
+</tr>
+{% for i in datos %}
+		<tr>
+			<td>{{i.Nombre_categoria}}</td>
+			
+			<td>{{i.fecha_registro|date}}</td>
+      <td>{% if i.estado %}
+              Alta
+            {% else %}
+              Baja
+          {% endif %}
+      </td>
+			<td>
+        <div class="btn-group">
+              <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle btn-sm" type="button" aria-expanded="false">Opciones <span class="caret"></span>
+              </button>
+              <ul role="menu" class="dropdown-menu">
+              {% if i.estado %}
+                   <li><a href="#" data-toggle="modal" onclick="EditCategorias({{i.id}})" data-target="#exampleModal">Editar</a></li>
+                    <li><a href="#" data-toggle="modal" onclick="EliminarCategorias({{i.id}})" data-target="#exampleModal">Eliminar</a></li> 
+                {% else %}
+                    <li><a href="#" data-toggle="modal" onclick="AltaCategorias({{i.id}})" data-target="#exampleModal">Recuperar</a></li>
+              {% endif %}
+               
+              </ul>
+          </div>
+      </td>
+		</tr>
+{% endfor %}
+<tr> <td colspan="2"><strong>Total Registros: </strong> {{total}}</td> </tr>
+</table>
+</div>
+<script type="text/javascript">
+function NewCategoria(){
+	$("#exampleModal .modal-title").text("Crear nuevo categoria");
+        $.ajax({
+            type:'GET',
+            url:'/NewCategoria/',
+            success:function(resp){
+              $(".modal-body").html(resp);
+            }
+        });
+}
+function EditCategorias(ids){
+      $.ajax({
+            type:'GET',
+            url:'/EditCategorias/'+ids+'/',
+            success:function(resp){
+              $(".modal-body").html(resp);
+            }
+        });
+}
+function EliminarCategorias(ids){
+    $.ajax({
+            type:'GET',
+            url:'/EliminarCategorias/'+ids+'/',
+            success:function(resp){
+              $(".modal-body").html(resp);
+            }
+        });
+}
+function AltaCategorias(ids){
+  $.ajax({
+            type:'GET',
+            url:'/AltaCategorias/'+ids+'/',
+            success:function(resp){
+              $(".modal-body").html(resp);
+            }
+        });
+}
+</script>

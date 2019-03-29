@@ -1,0 +1,88 @@
+
+ {% if user.is_superuser %}
+ 	 <div class="btn-group">
+  		<button class="btn btn-success" data-toggle="modal" data-target="#exampleModal" onclick="NewUser()"><span class="fa fa-user">
+  			Crear nuevo usuario
+  		</span></button>
+  </div>
+ {% endif %}
+<div class="table-responsive">
+<table class="table table-hover table-striped">
+	<tr><td colspan="10" align="center">LISTA DE USUARIOS REGISTRADOS EN EL SISTEMA</td></tr>
+		<tr class="success">
+			<td>Usuario</td>
+			<td>Nombre completo</td>
+			<td>Nro. CI.</td>
+			<td>Teléfono</td>
+			<td>Fecha de registro</td>
+			<td>Personal</td>
+			{% if user.is_superuser %}
+			<td>Estado</td>
+			{% endif %}
+		</tr>
+{% for j in users %}
+<tr>
+	<td>{{j.username}}</td>
+	<td>{{j.first_name|upper}}</td>
+	<td>{{j.perfil.ci}}</td>
+	<td>{{j.perfil.telefono}}</td>
+	<td>{{j.date_joined|date}}</td>
+	<td>
+		{% if j.is_active and j.is_staff and j.is_superuser %}
+		Administrador
+		{% else %}
+			{% if j.is_active and j.is_staff and j.is_superuser == False %}
+				Almacenes
+			{% else %}
+				{% if j.is_active and j.is_staff == False and j.is_superuser == False %}
+					Chofer/Ayudante
+				{% else %}
+					No activo
+				{% endif %}
+			{% endif %}
+		{% endif %}
+	</td>
+	{% if user.is_superuser %}
+		<td>
+		{% if j.is_active %}
+				<span><a href="#" onclick="VerUsuario({{j.id}});" title="Dar de Baja" data-toggle="modal" data-target="#exampleModal"><img src="/static/img/icon_success.gif"></a></span>
+			{% else %}
+				<span><a href="#" onclick="VerUsuario({{j.id}});" title="Dar de Baja" data-toggle="modal" data-target="#exampleModal"><img src="/static/img/icon_error.gif"></a></span>
+		{% endif %}
+		</td>
+	{% endif %}
+</tr>
+	{% endfor %}
+	<tr>
+		<td><strong>Registros:</strong>{{t_user}}</td>
+	</tr>
+	</table>
+</div>
+<script type="text/javascript">
+function VerUsuario(ids){
+	$("#exampleModal .modal-title").text("Asignar privilegio en el sistema");
+	$.ajax({
+		type:'GET',
+		url:'/VerUsuario/'+ids+'/',
+		success:function(resp){
+			$(".modal-body").html(resp);
+		}
+	});
+}
+function NewUser(){
+	$("#exampleModal .modal-title").text("Crear nuevo usuario");
+        $.ajax({
+          type:'GET',
+          url:'/nuevo/',
+          beforeSend:Espera,
+          success:function(resp){
+            $(".modal-body").html(resp);
+          }
+        });
+         function Espera(){
+          $(".modal-body").html('<img src="/static/img/log.gif" id="icono"></img><br>Procesando...');
+        }
+      }
+
+</script>
+

@@ -1,0 +1,125 @@
+<style type="text/css">
+#control{float: left;}
+#control select{width: 100%;}
+</style>
+<div id="controles">
+  <div class="btn-group">
+   <form role="form" id="demo-form2" method="get" data-parsley-validate class="form-horizontal form-label-left" style="float: left;">
+    <select name="stock" id="stock_id" class="form-control" required style="width:100%;">
+    	<option value="0">Todos los productos</option>
+    	<option value="1">Menores ó iguales a 10</option>
+    	<option value="2">Mayores a 10 y menores ó iguales a 50</option>
+    	<option value="3">Mayores a 50 productos</option>
+    </select>
+    <a class="btn btn-warning" type="button" href="#" onclick="ImprimirProducto()"><span class="fa fa-print">
+  			Imprimir Stock
+  		</span></a>
+</form>
+  		<button class="btn btn-success" data-toggle="modal" data-target="#exampleModal" 
+  		onclick="NewProducto()"><span class="fa fa-database">
+  			Registrar nuevo producto
+  		</span></button>
+  </div>
+</div>
+<div class="table-responsive">
+<h4 colspan="8" align="center">INVENTARIO DE PRODUCTOS REGISTRADOS</h4>
+<table class="table table-hover table-striped table-bordered dt-responsive datatable" border=1>
+<thead>
+	<th></th>
+	<th>PRODUCTO</th>
+	<th>UNIDAD</th>
+	<th>VENTA</th>
+	{% if user.is_superuser %}
+	<th>COMPRA</th>
+	{% endif %}
+	<th>CATEGORIA</th>
+	<th style="width: 8px;" align="center">STOCK</th>
+	<th>ESTADO</th>
+</thead>
+{% for i in datos %}
+		<tr>
+			<td>
+				<a href="#" onclick="kardex({{i.id}})" title="Ir a kardex">
+					<i class="fa fa-plus"></i>
+				</a></td>
+			<td>{{i.Nombre_producto|upper}}</td>
+			<td>{{i.Unidad|upper}}</td>
+			<td>{{i.Precio_venta}}</td>
+			{% if user.is_superuser %}
+			<td>{{i.Precio_compra}}</td>
+			{% endif %}
+			<td>{{i.Categoria.Nombre_categoria|upper}}</td>
+			{% if i.Stock <= 10 %}
+			<td style="background-color: #d6a4a4" align="center">{{i.Stock}}</td>
+			{% else %}
+			<td style="background-color:" align="center">{{i.Stock}}</td>
+			{% endif %}
+			<td>
+				{% if i.estado %}
+				Alta
+				{% else %}
+				Baja
+				{% endif %}
+			</td>
+			
+		</tr>
+{% endfor %}
+<tr> <td colspan="2"><strong>Total Registros: </strong> {{total}}</td> </tr>
+</table>
+</div>
+<script type="text/javascript">
+
+function NewProducto(){
+	$("#exampleModal .modal-title").text("Registrar nuevo producto");
+        $.ajax({
+          type:'GET',
+          url:'/NewProducto/',
+          beforeSend:Espera,
+          success:function(resp){
+            $(".modal-body").html(resp);
+          }
+        });
+}
+function kardex(ids){
+	$.ajax({
+		type:'GET',
+		url:'/kardex/'+ids+'/',
+		beforeSend:Espera,
+		success:function(res){
+			$('.x_content').html(res);
+		}
+	});
+}
+function ControlStock(){
+	$("#exampleModal .modal-title").text("Consultar el estado de Stock de los productos.");
+	$.ajax({
+		type:'GET',
+		url:'/ControlStock/',
+		beforeSend:Espera,
+		success:function(res){
+			$('.modal-body').html(res);
+		}
+	});
+}
+function Espera(){
+		$(".modal-body").html('<img src="/static/img/log.gif" id="icono"></img><br>Procesando...');
+}
+$('#stock_id').on('change',stock);
+function stock(){
+    var id = $(this).val();
+    console.log(id); //aki vemos k el id se esta inprimiendo
+    $.ajax({
+        type: 'GET',
+        url:"/stock_de_productos/"+id+"",
+        beforeSend:Espera,
+        success: function(data){
+            console.log(data);
+            $('.table-responsive').html(data);
+        }
+    });
+}
+function ImprimirProducto(){
+	var id = $("#stock_id").val();
+	window.open("/ImprimiarStock/"+id+"/");
+}
+</script>

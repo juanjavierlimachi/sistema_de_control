@@ -1,0 +1,46 @@
+<div class="table-responsive">
+<table class="table table-hover table-striped">
+	<tr><td colspan="8" align="center">INVENTARIO DE PRODUCTOS REGISTRADOS</td></tr>
+<tr class="success">
+	<td></td>
+	<td>PRODUCTO</td>
+	<td>UNIDAD</td>
+	<td>VENTA</td>
+	{% if user.is_superuser %}
+	<td>COMPRA</td>
+	{% endif %}
+	<td>CATEGORIA</td>
+	<td style="width: 8px;" align="center">STOCK</td>
+	<td>ESTADO</td>
+</tr>
+{% for i in datos %}
+		<tr>
+			<td>
+				<a href="#" onclick="kardex({{i.id}})" title="Ir a kardex">
+					<i class="fa fa-plus"></i>
+				</a></td>
+			<td>{{i.Nombre_producto|upper}}</td>
+			<td>{{i.Unidad|upper}}</td>
+			<td>{{i.Precio_venta}}</td>
+			{% if user.is_superuser %}
+			<td>{{i.Precio_compra}}</td>
+			{% endif %}
+			<td>{{i.Categoria.Nombre_categoria|upper}}</td>
+			{% if i.Stock <= 10 %}
+			<td style="background-color: #d6a4a4" align="center">{{i.Stock}}</td>
+			{% else %}
+			<td style="background-color:" align="center">{{i.Stock}}</td>
+			{% endif %}
+			<td>
+				{% if i.estado %}
+				Alta
+				{% else %}
+				Baja
+				{% endif %}
+			</td>
+			
+		</tr>
+{% endfor %}
+<tr> <td colspan="2"><strong>Total Registros: </strong> {{total}}</td> </tr>
+</table>
+</div>

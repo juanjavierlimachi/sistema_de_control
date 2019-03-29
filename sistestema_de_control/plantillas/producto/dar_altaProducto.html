@@ -1,0 +1,24 @@
+<div class="table-responsive">
+	<li>Está seguro de recuperar la información: <strong>{{dato.Nombre_producto}}</strong>?
+		<a href="#" onclick="recuperarProducto({{dato.id}})" class="btn btn-success">Confirmar</a>
+	</li>
+</div>
+<script type="text/javascript">
+function recuperarProducto(ids){
+	$.ajax({
+	  	type:"GET",
+	  	url:"/recuperarProducto/"+ids+"/",
+	  	success:function(resp){
+	  		$(".modal-body").html(resp);
+	  		$.ajax({
+				type:'GET',
+				url:'/kardex/'+{{dato.id}}+'/',
+				success:function(res){
+					$('.x_content').html(res);
+				}
+			});
+	  	}
+	  });
+}
+
+</script>

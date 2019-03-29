@@ -1,0 +1,48 @@
+
+<script type="text/javascript">
+$(document).ready(Sheart);
+    function Sheart(){ 
+      var tbuscar=$("#producto_id").attr('autocomplete','off');
+      tbuscar.keypress(buscarProducto);
+  }
+ function buscarProducto(){
+    $.ajax({
+        type:'GET',
+        url:'/buscarProducto/{{ids}}/',
+        data:$("#producto_id").serialize(),
+        success:resultado,
+        error:errores
+    });
+}
+$("#Tipo").on("submit",function(e){
+        e.preventDefault();
+          $.ajax({
+              type:"POST",
+              url:"/buscarProducto/{{ids}}/",
+              data:$("#producto_id").serialize(),
+              success:resultado,
+              error:errores
+          });
+      });
+function resultado(data){
+    $("#pro").fadeIn("slow");
+    console.log(data);
+    $("#pro").html(data);
+}
+function errores(){
+    console.log("Error");
+}
+</script>
+<div class="table-responsive">
+<form method='POST' id='Tipo' class="sidebar-form">
+  {% csrf_token %}
+        <div class="input-group">
+          <input type="text" name="producto" id="producto_id" class="form-control" placeholder="Escriba el nombre del producto" required>
+              <span class="input-group-btn">
+                <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+                </button>
+              </span>
+        </div>
+  </form>
+</div>
+<div id="pro"></div>

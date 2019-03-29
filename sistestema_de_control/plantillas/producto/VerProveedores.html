@@ -1,0 +1,101 @@
+<div id="controles">
+  <div class="btn-group">
+  		<button class="btn btn-success" data-toggle="modal" data-target="#exampleModal" 
+  		onclick="NewProveedor()"><span class="fa fa-database">
+  			Crear nuevo proveedor
+  		</span></button>
+  </div>
+</div>
+<div class="table-responsive">
+	<h4 colspan="8" align="center">LISTA DE PROVEEDORES</h4>
+<table class="table table-hover table-striped table-bordered dt-responsive datatable">
+<thead class="success">
+	<tr>
+		<th>NOMBRE/RAZON SOCIAL</th>
+		<th>NRO. DE NIT</th>
+		<th>TELÉFONO</th>
+		<th>DIRECCIÓN</th>
+		<th>CORREO ELEC.</th>
+		<th>REGISTRADO POR</th>
+		<th>FECHA REG.</th>
+		<th></th>
+	</tr>
+</thead>
+{% for i in datos %}
+		<tr>
+			<td>{{i.Nombre_Razon_Social|upper}}</td>
+			<td>{{i.Nit}}</td>
+			<td>{{i.Telefono}}</td>
+			<td>{{i.Direccion}}</td>
+			<td>{{i.Email}}</td>
+			<td>{{i.Usuario.get_full_name|upper}}</td>
+			<td>{{i.fecha_registro|date:"d/m/Y"}}</td>
+			<td>
+	        <div class="btn-group">
+	              <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle btn-sm" type="button" aria-expanded="false">Opciones <span class="caret"></span>
+	              </button>
+	              <ul role="menu" class="dropdown-menu">
+	              {% if i.estado %}
+	                   <li><a href="#" data-toggle="modal" onclick="EditarProveedor({{i.id}})" data-target="#exampleModal">Editar</a></li>
+	                    <li><a href="#" data-toggle="modal" onclick="EliminarProveedor({{i.id}})" data-target="#exampleModal">Eliminar</a></li> 
+	                {% else %}
+	                    <li><a href="#" data-toggle="modal" onclick="AltaProveedor({{i.id}})" data-target="#exampleModal">Recuperar</a></li>
+	              {% endif %}
+	               
+	              </ul>
+	          </div>
+	      </td>
+		</tr>
+{% endfor %}
+<tr> <td colspan="2"><strong>Total Registros: </strong> {{total}}</td> </tr>
+</table>
+</div>
+<script type="text/javascript">
+function NewProveedor(){
+	$("#exampleModal .modal-title").text("Crear nuevo proveedor");
+        $.ajax({
+          type:'GET',
+          url:'/NewProveedor/',
+          beforeSend:Espera,
+          success:function(resp){
+            $(".modal-body").html(resp);
+          }
+        });
+}
+function EditarProveedor(ids){
+		$("#exampleModal .modal-title").text("Editar datos del proveedor");
+        $.ajax({
+	          type:'GET',
+	          url:'/EditarProveedor/'+ids+'/',
+	          beforeSend:Espera,
+	          success:function(resp){
+	            $(".modal-body").html(resp);
+	          }
+        });
+}
+function EliminarProveedor(ids){
+	$("#exampleModal .modal-title").text("Editar datos del proveedor");
+        $.ajax({
+	          type:'GET',
+	          url:'/EliminarProveedor/'+ids+'/',
+	          beforeSend:Espera,
+	          success:function(resp){
+	            $(".modal-body").html(resp);
+	          }
+        });
+}
+function AltaProveedor(ids){
+	$("#exampleModal .modal-title").text("Recuperar al proveedor");
+        $.ajax({
+	          type:'GET',
+	          url:'/AltaProveedor/'+ids+'/',
+	          beforeSend:Espera,
+	          success:function(resp){
+	            $(".modal-body").html(resp);
+	          }
+        });
+}
+ function Espera(){
+          $(".modal-body").html('<img src="/static/img/log.gif" id="icono"></img><br>Procesando...');
+        }
+</script>

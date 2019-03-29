@@ -1,0 +1,18 @@
+<div class="table-responsive">
+	<li>Está seguro de recuperar la información: <strong>{{dato.Nombre_categoria}}</strong>?
+		<a href="#" onclick="recuperarCategoria({{dato.id}})" class="btn btn-success">Confirmar</a>
+	</li>
+</div>
+<script type="text/javascript">
+function recuperarCategoria(ids){
+	$.ajax({
+	  	type:"GET",
+	  	url:"/recuperarCategoria/"+ids+"/",
+	  	success:function(resp){
+	  		$(".modal-body").html(resp);
+	  		verCategorias();
+	  	}
+	  });
+}
+
+</script>

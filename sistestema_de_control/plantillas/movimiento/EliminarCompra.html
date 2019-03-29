@@ -1,0 +1,18 @@
+<div class="table-responsive">
+	<li>Está seguro de eliminar la información: <strong>{{dato.Nro_de_Compra}}</strong>?<br>
+		<strong>Nota: tambien se eliminaran, todos ingresos que pertenecen a esta compra</strong>
+		<a href="#" onclick="Eliminar_Compra({{dato.id}})" class="btn btn-danger">Confirmar</a>
+	</li>
+</div>
+<script type="text/javascript">
+function Eliminar_Compra(ids){
+	$.ajax({
+	  	type:"GET",
+	  	url:"/Eliminar_Compra/"+ids+"/",
+	  	success:function(resp){
+	  		$(".modal-body").html(resp);
+	  		verConpras();
+	  	}
+	});
+}
+</script>

@@ -1,0 +1,17 @@
+<div class="table-responsive">
+	<li>Está seguro de eliminar la información: <strong>{{dato.Nombre_categoria}}</strong>?
+		<a href="#" onclick="Eliminar_Categoria({{dato.id}})" class="btn btn-danger">Confirmar</a>
+	</li>
+</div>
+<script type="text/javascript">
+function Eliminar_Categoria(ids){
+	$.ajax({
+	  	type:"GET",
+	  	url:"/Eliminar_Categoria/"+ids+"/",
+	  	success:function(resp){
+	  		$(".modal-body").html(resp);
+	  		verCategorias();
+	  	}
+	});
+}
+</script>

@@ -1,0 +1,15 @@
+<div class="table-responsive">
+<div class="btn-group">
+  	<form method="POST" id="Busqueda" id="demo-form2" data-parsley-validate class="form-vertical form-label-left">{% csrf_token %}
+	   
+	    <select name="user" id="user" class="form-control" required>
+	    	<option value="0">Menores ó iguales a 10</option>
+	    	<option value="0">Mayores a 10 y menores o iguales a 50</option>
+	    	<option value="{{i.id}}">Mayores a 50 productos</option>
+	    	
+	    </select>
+	    
+	    <button class="btn btn-default">Consultar</button>
+	</form>	
+  </div>
+</div>

@@ -1,0 +1,65 @@
+
+<div class="table-responsive">
+<table class="table table-hover table-striped" border="1">
+	<tr>
+		<td colspan="4" align="center"><br>PLANILLA DE COMPRAS 
+			{% if proveedor %}
+				<strong><br>A {{proveedor.Nombre_Razon_Social|upper}}</strong> 
+			{% endif %}
+			DESDE <strong>{{inicio|date:"d/m/Y"}} </strong> 
+			<strong>HASTA {{final|date:"d/m/Y"}}</strong>
+		</td>
+	</tr>
+{% for i in datos %}
+		<tr class="success">
+			<td colspan="2" align="center"><br>NRO. DE COMPRA: <strong>{{i.Nro_de_Compra}}</strong></td>
+			<td colspan="2" align="center"><br>FECHA DE LA COMPRA. <strong>{{i.fecha_registro|date:"d/m/Y"}}</strong></td>
+		</tr>
+		<tr>
+			<td align="center"><br><strong>Productos</strong></td>
+			<td align="center"><br><strong>Cantidad</strong></td>
+			<td align="center"><br><strong>Total</strong></td>
+		</tr>
+		{% for j in i.ingreso.all %}
+		<tr>
+			<td align="center"><br>{{j.producto|upper}}</td>
+			<td align="center"><br>{{j.cantidad}}</td>
+			<td align="center"><br>{{j.total}}</td>
+		</tr>
+		{% endfor %}
+		<tr>
+			<td ><br><strong>Totales</strong></td><td></td>
+			<td align="center"><br><strong>{{i.Total_paquetes}}</strong></td>
+			<td align="center"><br><strong>{{i.Total_sin_descuento}}</strong></td>
+		</tr>
+	{% empty %}
+	<tr> <td colspan="4" align="center"><strong>No se encontró registros</strong></td> </tr>
+{% endfor %}
+</table><br>
+<table class="table table-hover table-striped" id="table-ingresos" style="width: 500px;float:left">
+<tr class="success"><td align="center"><strong>RESUMEN DE COSTOS</strong></td></tr>
+<tr> <td><strong>TOTAL COMPRAS: </strong> {{totalR}}</td> </tr>
+<tr><td><strong>TOTAL PAQUETES COMPRADOS: </strong> {{t_paquetes}} </td></tr>
+<tr><td><strong>MONTO SIN DESCUENTO: </strong> {{t_sin_descuento}} </td></tr>
+<tr><td><strong>DESCUENTO DEL 18%: </strong> {{descuento}} </td></tr>
+<tr><td><strong>TOTAL A CANCELAR: </strong> {{total}} </td></tr>
+<tr><td><strong>Reporte Generado Por:</strong> {{user.get_full_name}} </td></tr>
+</table>
+<table class="table table-hover table-striped" id="table-ingresos" style="width: 500px;">
+<tr class="success"><td align="center" colspan="4"><strong>RESUMEN DE PRODUCTOS</strong></td></tr>
+{% for i in productos_agrupados %}
+	{% for p in produc %}
+		{% if i.producto == p.id %}
+		<tr>
+			<td>{{p.Nombre_producto|upper}}</td>
+			<td>{{i.Precio_unidad}}</td>
+			<td>{{i.Total}}</td>
+			<td>{{i.pago}}</td>
+		</tr>
+		{% endif %}
+	{% endfor %}
+{% endfor %}
+<tr> <td colspan="2">Productos:<strong>{{totalPro}} </strong></td></tr>
+
+</table>
+</div>

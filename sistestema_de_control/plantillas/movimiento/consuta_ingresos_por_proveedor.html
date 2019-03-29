@@ -1,0 +1,23 @@
+
+<div class="table-responsive">
+<table class="table table-hover table-striped" id="table-ingresos">
+	<tr><td colspan="3" align="center">PLANILLA DE COMPRA {{pro.Nombre_Razon_Social|upper}}</td></tr>
+<tr class="success">
+	<td>PRODUCTO</td>
+	<td>PREC. UNI.</td>
+	<td>TOTAL</td>
+</tr>
+{% for i in datos %}
+	{% for p in producto %}
+		{% if i.producto == p.id %}
+		<tr>
+			<td>{{p.Nombre_producto|upper}}</td>
+			<td>{{i.Precio_unidad}}</td>
+			<td>{{i.Total}}</td>
+		</tr>
+		{% endif %}
+	{% endfor %}
+{% endfor %}
+<tr> <td colspan="2">Registros:<strong>{{total}} </strong></td></tr>
+</table>
+</div>

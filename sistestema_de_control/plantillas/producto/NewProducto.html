@@ -1,0 +1,28 @@
+{% load bootstrap %}
+<script type="text/javascript">
+ $('.table-responsive #demo-form2').submit(function(e){
+        e.preventDefault();
+        var dato=$(this).serialize();
+        $.ajax({
+            type:'POST',
+            url:'/NewProducto/',
+            data: dato,
+            success:function(resp){
+                $("#exampleModal .modal-title").text("");
+                $(".modal-body").html(resp);
+                verProducto();
+            }
+        });
+    });
+</script>
+<div class="table-responsive">
+ <form method="POST" role="form" id="demo-form2" data-parsley-validate class="form-horizontal form-label-left" >
+    {% csrf_token %}
+        {{forms|bootstrap_horizontal}}
+    <div class="form-group">
+      <div class="col-sm-10 col-sm-offset-2">
+        <button type="submit" class="btn btn-primary">Registrar</button>
+      </div>
+    </div>
+  </form>
+</div>

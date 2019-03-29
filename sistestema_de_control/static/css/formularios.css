@@ -1,0 +1,25 @@
+.card{
+	width: 500px;height: auto;margin: auto;margin-top: 20px;
+	margin-right: 250px; background-color: white; border-radius: 15px;
+}
+.card form{
+	width: 95%;height: auto;margin: auto;padding: 5px;
+	font: normal bold 12px Verdana, Arial;
+}
+/*.card form button{
+	float: right;margin-right: 215px;margin-bottom: 15px;
+	
+}*/
+.card form label{
+	display: inline-block;
+	width: 190px;font-size: 15px;
+	margin-left: 10px;
+}
+.card form input{
+	height: 25px;
+	display: inline-block;width: 200px;margin-bottom: 10px;
+}
+.btn-success{margin-left: 200px;}
+#icono{margin-left: 450px;margin-top: 20px}
+.card #texto{text-align: center;margin: auto;font-weight:bold; font-size: 16px;}
+table .success{font-weight: bold;}

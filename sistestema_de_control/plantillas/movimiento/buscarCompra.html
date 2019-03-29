@@ -1,0 +1,37 @@
+<div class="table-responsive">
+<table class="table table-hover table-striped" id="table-ingresos">
+	<tr><td colspan="10" align="center">COMPRA DE PRODUCTOS REGISTRADOS EN EL SISTEMA</td></tr>
+<tr class="success">
+		<td></td>
+	<td>NRO. DE COMPRA</td>
+	<td>RESPONSABLE</td>
+	<td>CORTESIA</td>
+	<td>PROVEEDOR</td>
+	<td>F. DE COMPRA.</td>
+	<td>REG. POR</td>
+</tr>
+{% for i in datos %}
+		<tr>
+			<td>
+				<a href="#" onclick="NewOrden_detalle({{i.id}})" title="Ir a detalles">
+					<i class="fa fa-plus"></i>
+				</a></td>
+			<td>{{i.Nro_de_Compra}}</td>
+			<td>{{i.Responsable|upper}}</td>
+			<td>{% if i.Cortesia %}
+					SI
+				{% else %}
+					NO
+				{% endif %}
+			</td>
+			<td>{{i.proveedor}}</td>
+			<td>{{i.fecha_registro|date:"d-m-Y"}}</td>
+			<td>{{i.Usuario.get_full_name|upper}}</td>
+			
+		</tr>
+	{% empty %}
+	<tr> <td colspan="10" align="center"><strong>No se encontró registros</strong></td> </tr>
+{% endfor %}
+<tr> <td colspan="10"><strong>Total Registros: </strong> {{total}}</td> </tr>
+</table>
+</div>
