@@ -31,9 +31,10 @@
      <!--  <link href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.dataTables.min.css" rel="stylesheet"> -->
 
-    <!-- Custom Theme Style <link href="{% static 'css/formularios.css' %}" rel="stylesheet"> -->
+    <!-- Custom Theme Style <link href="{% static 'css/formularios.css' %}" rel="stylesheet">
+    http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css -->
     <link href="{% static 'css/custom.min.css' %}" rel="stylesheet">
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" />
+    <link rel="stylesheet" href="{% static 'css/jquery-ui.css' %}" />
 
 
 
@@ -372,7 +373,7 @@
     <script src="{% static 'js/jquery.min.js' %}"></script>
    
 
-
+     <script src="{% static 'js/jquery-ui.js' %}"></script>
    <!--<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.flash.min.js"></script>
@@ -424,10 +425,9 @@
     <!-- Custom Theme Scripts  -->
 
     <script src="{% static 'js/custom.min.js' %}"></script>
-	   <script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
      <script type="text/javascript">
       
-     /* $(document).ready(function() {
+     /* $(document).ready(function() {  http://code.jquery.com/ui/1.10.1/jquery-ui.js
     $('.datatable').DataTable( {
         dom: 'Bfrtip',
         buttons: [

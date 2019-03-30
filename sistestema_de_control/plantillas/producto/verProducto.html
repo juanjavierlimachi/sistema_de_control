@@ -1,19 +1,22 @@
 <style type="text/css">
-#control{float: left;}
-#control select{width: 100%;}
+.btn-group{width: 100%;}
+.btn-group #demo-form2{float: right; width:450px}
+.btn-group #demo-form2 select{width: 64%;}
+.btn-group #demo-form2 button{float: right;
+    margin-top: -35px;}
 </style>
 <div id="controles">
   <div class="btn-group">
-   <form role="form" id="demo-form2" method="get" data-parsley-validate class="form-horizontal form-label-left" style="float: left;">
-    <select name="stock" id="stock_id" class="form-control" required style="width:100%;">
+   <form role="form" id="demo-form2" method="get" data-parsley-validate class="form-horizontal form-label-left">
+    <select name="stock" id="stock_id" class="form-control" required>
     	<option value="0">Todos los productos</option>
     	<option value="1">Menores ó iguales a 10</option>
     	<option value="2">Mayores a 10 y menores ó iguales a 50</option>
     	<option value="3">Mayores a 50 productos</option>
     </select>
-    <a class="btn btn-warning" type="button" href="#" onclick="ImprimirProducto()"><span class="fa fa-print">
-  			Imprimir Stock
-  		</span></a>
+    <button class="btn btn-warning" type="button" href="#" onclick="ImprimirProducto()"><span class="fa fa-print">
+  			Imprimir información
+  		</span></button>
 </form>
   		<button class="btn btn-success" data-toggle="modal" data-target="#exampleModal" 
   		onclick="NewProducto()"><span class="fa fa-database">
