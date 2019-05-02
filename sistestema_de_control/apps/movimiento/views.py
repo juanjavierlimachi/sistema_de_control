@@ -531,6 +531,10 @@ def ReportesIngresos(request, id_user,id_pro,inicio,final):
 					else:
 						return HttpResponse("Error")
 
+def ReportesSalidas(request, id_user,id_movil,inicio,final):
+	
+	return HttpResponse("EN PROCESO DE CREACIÓN")
+
 			
 def NewOrden(request):
 	Usuario=Orden(Usuario=request.user)

@@ -46,7 +46,7 @@
 			</td>
 			<td align="center">{{i.id}}</td>
 			<td>{{i.fecha_salida|date}}</td>
-			<td>{{i.Movil.Conductor|upper}}</td>
+			<td>{{i.Movil.Conductor.get_full_name|upper}}</td>
 			<td> {{i.Movil}}</td>
 			<td>{% if i.Kilometraje %}
 				{{i.Kilometraje}}

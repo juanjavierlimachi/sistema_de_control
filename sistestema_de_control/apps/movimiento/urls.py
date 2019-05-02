@@ -14,7 +14,7 @@ urlpatterns = [
     url(r'^consuta_por_fecha_ingresos/$', consuta_por_fecha_ingresos),
     
     url(r'^ReportesIngresos/(?P<id_user>\d+)/(?P<id_pro>\d+)/(?P<inicio>[^/]+)/(?P<final>[^/]+)/$',ReportesIngresos),
-    
+    url(r'^ReportesSalidas/(?P<id_user>\d+)/(?P<id_movil>\d+)/(?P<inicio>[^/]+)/(?P<final>[^/]+)/$',ReportesSalidas),
     url(r'^consuta_por_fecha_salidas/$', consuta_por_fecha_salidas),
     
     url(r'^NewOrden/$', NewOrden),
