@@ -22,8 +22,8 @@ def ingresa_productos(request,id, ids):
 	if request.method == 'POST':
 		trans=IngresoProducto.objects.create(
 					cantidad=int(request.POST['cantidad']),
-					Precio_unidad=float(request.POST['Precio_unidad']),
-					total=float(request.POST['Precio_unidad']) * float(request.POST['cantidad']),
+					Precio_unidad=float(producto.Precio_compra),
+					total=float(producto.Precio_compra) * float(request.POST['cantidad']),
 					fecha_de_vencimiento=datetime.strptime(request.POST['fecha_de_vencimiento'],"%d/%m/%Y"),
 					producto_id=int(id),
 					proveedor_id=int(compra.proveedor.id),
@@ -43,13 +43,57 @@ def ingresa_productos(request,id, ids):
 			total_pago = t_sin_descuento - descuento
 		Orden.objects.filter(id=int(ids)).update(Total_paquetes=t_Paquetes,Total_sin_descuento=t_sin_descuento,descuento=descuento,toto_pago=total_pago)
 		#aki devo agregar todas los ingresos a la compra
+		
 		actual=producto.Stock + int(request.POST['cantidad'])
-		Producto.objects.filter(id=int(id)).update(Stock=actual)
+		Imvercion_Producto = int(producto.Precio_compra) * int(actual)
+		Producto.objects.filter(id=int(id)).update(Stock=actual,total=Imvercion_Producto)
 
 		return HttpResponse("Registro Exitoso")
 	else:
 		forms=FormIngreso()
 	return render(request,'producto/ingresa_productos.html',{'producto':producto,'forms':forms,'ids':int(ids)})
+
+def salida_productos(request, id, ids):
+	print "id de la salida",int(ids)
+	producto = Producto.objects.get(id=int(id))
+	compra=Salida.objects.get(id=int(ids))#hago una consulta al modelo Salida
+
+	if request.method == 'POST':
+		if producto.Stock <= 0 or int(request.POST['cantidad']) > producto.Stock:
+			return HttpResponse("NO SE REGISTRÓ LA SALIDA PORQUE LOS DATOS NO SON VÁLDOS, INTENTE NUEVAMENTE GRACIAS.")
+		else:
+			trans=SalidaProducto.objects.create(
+						cantidad=int(request.POST['cantidad']),
+						Precio_venta=float(producto.Precio_venta),
+						total=float(producto.Precio_venta) * float(request.POST['cantidad']),
+						producto_id=int(id),
+						Movil_id=int(compra.Movil.id),
+						Usuario_id=int(request.user.id)
+					)
+			compra.salidas.add(trans)#ingreso esa transaccion a la compra
+			compra.save()#GUARDO LA TRANSACCION
+			t_Paquetes = 0
+			Metas = 0
+			Avanse = 0
+			Porsentaje = 0
+			total_pago = 0
+
+			for i in compra.salidas.all():
+				t_Paquetes = i.cantidad + t_Paquetes
+				# t_sin_descuento = i.total + t_sin_descuento
+				# descuento = t_sin_descuento * 0.18
+				total_pago = i.total + total_pago
+			Salida.objects.filter(id=int(ids)).update(Total=t_Paquetes,Total_a_pagar=total_pago)
+			#aki devo agregar todas los ingresos a la compra
+			actual=producto.Stock - int(request.POST['cantidad'])
+			Imvercion_Producto = int(producto.Precio_compra) * int(actual)
+			Producto.objects.filter(id=int(id)).update(Stock=actual,total=Imvercion_Producto)
+
+			return HttpResponse("Registro Exitoso")
+	else:
+		forms=FormSalidaMovil()
+	return render(request,'producto/salida_productos.html',{'producto':producto,'forms':forms,'ids':int(ids)})
+
 def verIngresos(request):
 
 	datos 		= IngresoProducto.objects.filter(estado=True).order_by('-id')
@@ -230,6 +274,130 @@ def consuta_por_fecha_ingresos(request):
 						return render(request,'movimiento/consuta_por_fecha_ingresos.html',dat)
 					else:
 						return HttpResponse("Error")
+def consuta_por_fecha_salidas(request):
+	if request.method == "POST":
+		t_paquetes = 0
+		t_sin_descuento = 0
+		descuento = 0
+		total = 0
+		inicio=datetime.strptime(request.POST['inicio'],"%d/%m/%Y")
+		final=datetime.strptime(request.POST['final'],"%d/%m/%Y")
+		final = final + timedelta(days=1)
+		#user  Vehiculos
+		if int(request.POST['usuario']) == 0 and int(request.POST['user']) == 0:
+			#SI ELEJE TODOS LOS USURIO Y TODOS LOS PROVEEDORES
+			productos=Salida.objects.filter(fecha_salida__range=(inicio,final),estado=True)
+
+			productos_agrupados = SalidaProducto.objects.filter(fecha_registro__range=(inicio,final)).values('producto').annotate(Total=Sum('cantidad'),pago=Sum('total'))
+			produc = Producto.objects.filter(estado=True)
+			# for i in productos:
+			# 	t_paquetes = t_paquetes + i.Total_paquetes
+			# 	t_sin_descuento = t_sin_descuento + i.Total_sin_descuento
+			# 	descuento = descuento + i.descuento
+			# 	total = total + i.toto_pago
+
+			dat={
+				'datos':productos,
+				'totalR':productos.count(),
+				't_paquetes':t_paquetes,
+				't_sin_descuento':t_sin_descuento,
+				'descuento':descuento,
+				'total':total,
+				'inicio':inicio.date(),
+				'final':final.date() - timedelta(days=1),
+				'productos_agrupados':productos_agrupados,
+				'totalPro':productos_agrupados.count(),
+				'produc':produc
+			}
+			return render(request,'movimiento/consuta_por_fecha_salidas.html',dat)
+		else:
+			#SI ELEJI TODOS LOS USUARIOS PERO ESCOJE UN PROVEEDOR
+			if int(request.POST['usuario']) == 0 and int(request.POST['user']) != 0:
+				productos=Salida.objects.filter(Movil_id=int(request.POST['user']),fecha_salida__range=(inicio,final),estado=True)
+				
+				productos_agrupados = SalidaProducto.objects.filter(Movil_id=int(request.POST['user']),fecha_salida__range=(inicio,final)).values('producto').annotate(Total=Sum('cantidad'),pago=Sum('Total_a_pagar'))
+				produc = Producto.objects.filter(estado=True)
+
+				proveedor =''
+				for i in productos:
+					# t_paquetes = t_paquetes + i.Total_paquetes
+					# t_sin_descuento = t_sin_descuento + i.Total_sin_descuento
+					# descuento = descuento + i.descuento
+					# total = total + i.toto_pago
+					proveedor = i.Movil
+
+				dat={
+					'datos':productos,
+					'totalR':productos.count(),
+					't_paquetes':t_paquetes,
+					't_sin_descuento':t_sin_descuento,
+					'descuento':descuento,
+					'total':total,
+					'inicio':inicio.date(),
+					'final':final.date() - timedelta(days=1),
+					'proveedor':proveedor,
+					'productos_agrupados':productos_agrupados,
+					'totalPro':productos_agrupados.count(),
+					'produc':produc
+				}
+				return render(request,'movimiento/consuta_por_fecha_salidas.html',dat)
+			else:
+				#SI ELIJE UN USUARIO Y TODOS LOS PROVEEDORES 
+				if int(request.POST['user']) == 0 and int(request.POST['usuario']) != 0:
+					productos=Salida.objects.filter(Usuario_id=int(request.POST['usuario']),fecha_salida__range=(inicio,final),estado=True)
+					productos_agrupados = SalidaProducto.objects.filter(Usuario_id=int(request.POST['usuario']),fecha_salida__range=(inicio,final)).values('producto').annotate(Total=Sum('cantidad'),pago=Sum('Total_a_pagar'))
+					produc = Producto.objects.filter(estado=True)
+
+
+					# for i in productos:
+					# 	t_paquetes = t_paquetes + i.Total_paquetes
+					# 	t_sin_descuento = t_sin_descuento + i.Total_sin_descuento
+					# 	descuento = descuento + i.descuento
+					# 	total = total + i.toto_pago
+
+					dat={
+						'datos':productos,
+						'totalR':productos.count(),
+						't_paquetes':t_paquetes,
+						't_sin_descuento':t_sin_descuento,
+						'descuento':descuento,
+						'total':total,
+						'inicio':inicio.date(),
+						'final':final.date() - timedelta(days=1),
+						'productos_agrupados':productos_agrupados,
+						'totalPro':productos_agrupados.count(),
+						'produc':produc
+					}
+					return render(request,'movimiento/consuta_por_fecha_salidas.html',dat)
+				else:
+					#SI ELEJE UN PROVEEDOR Y UN USUARIO
+					if int(request.POST['user']) != 0 and int(request.POST['usuario']) != 0:
+						productos=Orden.objects.filter(Movil_id=int(request.POST['user']),Usuario_id=int(request.POST['usuario']),fecha_salida__range=(inicio,final),estado=True)
+						
+						productos_agrupados = IngresoProducto.objects.filter(Movil_id=int(request.POST['user']),Usuario_id=int(request.POST['usuario']),fecha_salida__range=(inicio,final)).values('producto').annotate(Total=Sum('cantidad'),pago=Sum('Total_a_pagar'))
+						produc = Producto.objects.filter(estado=True)
+						# for i in productos:
+						# 	t_paquetes = t_paquetes + i.Total_paquetes
+						# 	t_sin_descuento = t_sin_descuento + i.Total_sin_descuento
+						# 	descuento = descuento + i.descuento
+						# 	total = total + i.toto_pago
+
+						dat={
+							'datos':productos,
+							'totalR':productos.count(),
+							't_paquetes':t_paquetes,
+							't_sin_descuento':t_sin_descuento,
+							'descuento':descuento,
+							'total':total,
+							'inicio':inicio.date(),
+							'final':final.date() - timedelta(days=1),
+							'productos_agrupados':productos_agrupados,
+							'totalPro':productos_agrupados.count(),
+							'produc':produc
+						}
+						return render(request,'movimiento/consuta_por_fecha_salidas.html',dat)
+					else:
+						return HttpResponse("Error")
 def ReportesIngresos(request, id_user,id_pro,inicio,final):
 	if request.method == "GET":
 		t_paquetes = 0
@@ -373,10 +541,23 @@ def NewOrden(request):
 			ids=Orden.objects.latest('id')
 			return HttpResponse(ids.id)
 		else:
-			HttpResponse("El registro ya existe.")
+			HttpResponse("Ocurrio un Error, contactese con el administrador del sistema.")
 	else:
 		forms=FormOrden(instance=Usuario)
 	return render(request,'movimiento/NewOrden.html',{'forms':forms})
+def NewSalida(request):
+	Usuario=Salida(Usuario=request.user)
+	if request.method == 'POST':
+		forms=FormSalida(request.POST,instance=Usuario)
+		if forms.is_valid():
+			forms.save()
+			ids=Salida.objects.latest('id')
+			return HttpResponse(ids.id)
+		else:
+			HttpResponse("Ocurrio un Error, contactese con el administrador del sistema.")
+	else:
+		forms=FormSalida(instance=Usuario)
+	return render(request,'movimiento/NewSalida.html',{'forms':forms})
 
 def NewOrden_detalle(request, id):
 	dato = Orden.objects.get(id=int(id))
@@ -400,16 +581,45 @@ def NewOrden_detalle(request, id):
 		}
 	return render(request, 'movimiento/NewOrden_detalle.html',dic)
 
+def Salida_detalle(request, id):
+	dato = Salida.objects.get(id=int(id))
+	request.session['sesion'] = []#CREO UNA VARIABLE DE SESSION
+	detalle = request.session['sesion']
+	detalle.append(id)
+	request.session['sesion'] = detalle
+	# ingresos = IngresoProducto.objects.filter(Nro_de_Compra=int(id),estado=True)
+	# total = ingresos.count()
+	# costo=0
+	# cantidad=0
+	# for i in ingresos:
+	# 	costo = i.total + costo
+	# 	cantidad = i.cantidad + cantidad
+	dic={
+			'dato':dato
+			# 'ingresos':ingresos,
+			# 'total':total,
+			# 'costo':costo,
+			# 'cantidad':cantidad
+		}
+	return render(request, 'movimiento/Salida_detalle.html',dic)
 
 def verConpras(request):
 	datos = Orden.objects.all().order_by('-id')
 	total = datos.count()
-	
 	return render(request,'movimiento/verConpras.html',{'datos':datos,'total':total})
+def verSalidas(request):
+	datos = Salida.objects.all().order_by('-fecha_salida')
+	total = datos.count()
+	return render(request,'movimiento/verSalidas.html',{'datos':datos,'total':total})
 def filtar_ingresos(request):
 	proveedores = Proveedor.objects.all().order_by('-id')
 	user=User.objects.filter(is_superuser=True, is_staff=True, is_active=True)
 	return render(request,'movimiento/filtar_ingresos.html',{'proveedores':proveedores,'user':user})
+def filtar_salidas(request):
+	proveedores = Vehiculo.objects.all().order_by('-id')
+	user=User.objects.filter(is_superuser=True, is_staff=True, is_active=True)
+	return render(request,'movimiento/filtar_salidas.html',{'proveedores':proveedores,'user':user})
+
 def EditCompra(request,id):
 	dato=Orden.objects.get(id=int(id))
 	if request.method=='POST':
@@ -420,7 +630,16 @@ def EditCompra(request,id):
 	else:
 		forms=FormOrden(instance=dato)
 	return render(request,'movimiento/EditCompra.html',{'forms':forms,'dato':dato})
-
+def EditSalida(request, id):
+	dato=Salida.objects.get(id=int(id))
+	if request.method=='POST':
+		forms=FormSalida(request.POST, instance=dato)
+		if forms.is_valid():
+			forms.save()
+			return HttpResponse("El registro se actualizó correctamente.")
+	else:
+		forms=FormSalida(instance=dato)
+	return render(request,'movimiento/EditSalida.html',{'forms':forms,'dato':dato})
 
 from django.db.models import Count
 
@@ -482,8 +701,9 @@ def EditarProductosDeCompra(request, id):
 	compra = request.session['sesion']
 	ids_deLACompra = compra[0]
 	dato=IngresoProducto.objects.get(id=int(id))
+	id_producto = Producto.objects.get(id=int(dato.producto_id))	#float(producto.Precio_compra)
 	if request.method=='POST':
-		IngresoProducto.objects.filter(id=int(id)).update(cantidad=int(request.POST['cantidad']),Precio_unidad=float(request.POST['Precio_unidad']),fecha_de_vencimiento=datetime.strptime(request.POST['fecha_de_vencimiento'],"%d/%m/%Y"),total=float(request.POST['Precio_unidad']) * float(request.POST['cantidad']))
+		IngresoProducto.objects.filter(id=int(id)).update(cantidad=int(request.POST['cantidad']),Precio_unidad=float(id_producto.Precio_compra),fecha_de_vencimiento=datetime.strptime(request.POST['fecha_de_vencimiento'],"%d/%m/%Y"),total=float(id_producto.Precio_compra) * float(request.POST['cantidad']))
 		orden = Orden.objects.get(id=int(ids_deLACompra))
 		
 		t_Paquetes = 0
@@ -498,6 +718,12 @@ def EditarProductosDeCompra(request, id):
 			total_pago = t_sin_descuento - descuento
 		Orden.objects.filter(id=int(ids_deLACompra)).update(Total_paquetes=t_Paquetes,Total_sin_descuento=t_sin_descuento,descuento=descuento,toto_pago=total_pago)
 
+		ant_stock = id_producto.Stock
+		actual=(id_producto.Stock + int(request.POST['cantidad'])) - id_producto.Stock
+		Imvercion_Producto = int(id_producto.Precio_compra) * int(actual)
+		Producto.objects.filter(id=int(id_producto.id)).update(Stock=actual,total=Imvercion_Producto)
+
+		
 		return HttpResponse("El registro de actualizó correctamente")
 	else:
 		forms=FormIngreso(instance=dato)
@@ -512,12 +738,20 @@ def EliminarProductosDeCompra(request,id):
 
 def Eliminar_ingreso(request, id):
 	dato=IngresoProducto.objects.get(id=int(id))
+	id_producto = Producto.objects.get(id=int(dato.producto_id))#obtengo el producto
 	compra = request.session['sesion']
 	ids_deLACompra = compra[0]
 	print "Id de la compra",ids_deLACompra
 	ingresos = Orden.objects.get(id=int(ids_deLACompra))
 	ingresos.ingreso.remove(id)
 	dato.delete()#elimino completamente el dato
+
+	ant_stock = id_producto.Stock
+	actual= int(id_producto.Stock) - int(dato.cantidad)
+	Imvercion_Producto = int(id_producto.Precio_compra) * int(actual)
+	Producto.objects.filter(id=int(id_producto.id)).update(Stock=actual,total=Imvercion_Producto)
+
+
 	t_Paquetes = 0
 	t_sin_descuento = 0
 	descuento = 0
@@ -528,6 +762,7 @@ def Eliminar_ingreso(request, id):
 		descuento = t_sin_descuento * 0.18
 		total_pago = t_sin_descuento - descuento
 	Orden.objects.filter(id=int(ids_deLACompra)).update(Total_paquetes=t_Paquetes,Total_sin_descuento=t_sin_descuento,descuento=descuento,toto_pago=total_pago)
+	
 	return HttpResponse("Se eliminó la información correctamente")
 
 def EliminarCompra(request, id):
@@ -536,6 +771,12 @@ def EliminarCompra(request, id):
 def Eliminar_Compra(request, id):
 	dato=Orden.objects.get(id=int(id))
 	dato.delete()
-	return HttpResponse("Se elimino la información correctamente")
+	return HttpResponse("Se eliminó la información correctamente")
 
-
+def EliminarSalida(request, id):
+	dato=Salida.objects.get(id=int(id))
+	return render(request,'movimiento/EliminarSalida.html',{'dato':dato})	
+def Eliminar_Salida(request, id):
+	dato=Salida.objects.get(id=int(id))
+	dato.delete()
+	return HttpResponse("Se eliminó la información correctamente")

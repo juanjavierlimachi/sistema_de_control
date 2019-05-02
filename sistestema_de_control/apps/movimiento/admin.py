@@ -6,3 +6,7 @@ from .models import *
 # Register your models here.
 admin.site.register(IngresoProducto)
 admin.site.register(Orden)
+
+admin.site.register(Vehiculo)
+admin.site.register(SalidaProducto)
+admin.site.register(Salida)

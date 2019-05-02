@@ -28,46 +28,48 @@
 <h4 colspan="8" align="center">INVENTARIO DE PRODUCTOS REGISTRADOS</h4>
 <table class="table table-hover table-striped table-bordered dt-responsive datatable" border=1>
 <thead>
-	<th></th>
+	<th style="width: 5%;">Nro</th>
 	<th>PRODUCTO</th>
-	<th>UNIDAD</th>
-	<th>VENTA</th>
-	{% if user.is_superuser %}
-	<th>COMPRA</th>
-	{% endif %}
+	<th style="width: 6%;">UNIDAD</th>
 	<th>CATEGORIA</th>
+	<th style="width: 5%;">VENTA</th>
+	{% if user.is_superuser %}
+	<th style="width: 5%;">COMPRA</th>
+	{% endif %}
 	<th style="width: 8px;" align="center">STOCK</th>
-	<th>ESTADO</th>
+	<th style="width: 10%;" align="center">TOTAL Bs.</th>
+	<th style="width: 3%;" align="center">COD</th>
 </thead>
 {% for i in datos %}
 		<tr>
 			<td>
 				<a href="#" onclick="kardex({{i.id}})" title="Ir a kardex">
-					<i class="fa fa-plus"></i>
+					{{forloop.counter}}          <i class="fa fa-plus"></i>
 				</a></td>
 			<td>{{i.Nombre_producto|upper}}</td>
-			<td>{{i.Unidad|upper}}</td>
-			<td>{{i.Precio_venta}}</td>
-			{% if user.is_superuser %}
-			<td>{{i.Precio_compra}}</td>
-			{% endif %}
+			<td align="center">{{i.Unidad|upper}}</td>
 			<td>{{i.Categoria.Nombre_categoria|upper}}</td>
+			<td align="center">{{i.Precio_venta}}</td>
+			{% if user.is_superuser %}
+			<td align="center">{{i.Precio_compra}}</td>
+			{% endif %}
 			{% if i.Stock <= 10 %}
 			<td style="background-color: #d6a4a4" align="center">{{i.Stock}}</td>
 			{% else %}
-			<td style="background-color:" align="center">{{i.Stock}}</td>
-			{% endif %}
-			<td>
-				{% if i.estado %}
-				Alta
+				{% if i.Stock <= 50 %}
+			<td style="background-color:rgba(203,235,6,0.85)" align="center">{{i.Stock}}</td>
 				{% else %}
-				Baja
+					{% if i.Stock > 50 %}
+					<td style="background-color:rgba(68,201,66,0.85)" align="center">{{i.Stock}}</td>
+					{% endif %}
 				{% endif %}
-			</td>
-			
+			{% endif %}
+			<td>{{i.total}}</td>
+			<td align="center">{{i.id}}</td>
 		</tr>
 {% endfor %}
-<tr> <td colspan="2"><strong>Total Registros: </strong> {{total}}</td> </tr>
+<tr> <td colspan="3"><strong>Totales: </strong></td><td></td>
+	<td><strong>{{t_ventas}}</strong></td><td><strong>{{t_compras}}</strong></td> </tr>
 </table>
 </div>
 <script type="text/javascript">

@@ -35,9 +35,13 @@ def EditProducto(request, id):
 	return render(request,'producto/EditProducto.html',{'forms':forms,'dato':dato})
 
 def verProducto(request):
-	datos = Producto.objects.all().order_by('-id')
-	total = datos.count()
-	return render(request,'producto/verProducto.html',{'datos':datos,'total':total})
+	datos = Producto.objects.filter(estado=True).order_by('-id')
+	t_compras = 1
+	t_ventas = 1
+	for i in datos:
+		t_ventas = (i.Stock * i.Precio_venta) + t_ventas
+		t_compras = (i.Stock * i.Precio_compra) + t_compras
+	return render(request,'producto/verProducto.html',{'datos':datos,'t_ventas':t_ventas,'t_compras':t_compras})
 def verCategorias(request):
 	datos = Categoria.objects.all().order_by('-id')
 	total = Categoria.objects.all().count()
@@ -61,7 +65,7 @@ def kardexProducto(request,id):
 	final="%s-%s-%s" % (fecha.year, fecha.month, calendar.monthrange(fecha.year-1, fecha.month+1)[1])
 
 
-	Total_ingresos=IngresoProducto.objects.filter(producto_id=int(id),fecha_registro__range=(inicio,final))
+	Total_ingresos=IngresoProducto.objects.filter(producto_id=int(id),fecha_registro__range=(inicio,fecha))
 	
 	#Total_ingresos=IngresoProducto.objects.filter(producto=int(id)).count()
 	bsi = 0
@@ -114,6 +118,9 @@ def recuperarProveedor(request, id):
 def buscar_producto(request):
 	ids = request.GET['ids']
 	return render(request,'producto/buscar_producto.html',{'ids':int(ids)})
+def buscar_produc_ingreso(request):
+	ids = request.GET['ids']
+	return render(request,'producto/buscar_produc_ingreso.html',{'ids':int(ids)})
 
 def buscarProducto(request,id):
 	ids = int(id)
@@ -135,6 +142,27 @@ def buscarProducto(request,id):
 		)
 		resultados=Producto.objects.filter(busqueda, estado=True).distinct()
 		return render(request,'producto/buscarProducto.html',{'resultados':resultados,'ids':ids})
+def buscarProductoParaIngreso(request,id):
+	ids = int(id)
+	if request.method=="POST":
+		texto=request.POST["producto"]
+		busqueda=(
+			Q(Nombre_producto__icontains=texto) |
+			Q(Nombre_producto__icontains=texto) |
+			Q(id__icontains=texto)
+		)
+		resultados=Producto.objects.filter(busqueda, estado=True).distinct()
+		return render(request,'producto/buscarProductoParaIngreso.html',{'resultados':resultados,'ids':ids})
+	else:
+		texto=request.GET["producto"]
+		busqueda=(
+			Q(Nombre_producto__icontains=texto) |
+			Q(Nombre_producto__icontains=texto) |
+			Q(id__icontains=texto)
+		)
+		resultados=Producto.objects.filter(busqueda, estado=True).distinct()
+		return render(request,'producto/buscarProductoParaIngreso.html',{'resultados':resultados,'ids':ids})
+
 def EditCategorias(request, id):
 	dato=Categoria.objects.get(id=int(id))
 	if request.method=='POST':
@@ -176,4 +204,47 @@ def recuperarCategoria(request, id):
 	dato=Categoria.objects.get(id=int(id))
 	Categoria.objects.filter(id=int(id)).update(estado=True)
 	return HttpResponse("Se recuperó la información:   %s  correctamente"%(dato.Nombre_categoria))
+
+def verVehiculos(request):
+	datos = Vehiculo.objects.all().order_by('-id')
+	total = Vehiculo.objects.all().count()
+	return render(request,'producto/verVehiculos.html',{'datos':datos,'total':total})
+
+def NewVehiculo(request):
+	if request.method == 'POST':
+		forms=FormVehiculo(request.POST)
+		if forms.is_valid():
+			forms.save()
+			return HttpResponse("Registro Exitoso...!")
+	else:
+		forms=FormVehiculo()
+	return render(request,'producto/NewVehiculo.html',{'forms':forms})
+
+def EditarVehiculo(request, id):
+	dato=Vehiculo.objects.get(id=int(id))
+	if request.method=='POST':
+		forms=FormVehiculo(request.POST, instance=dato)
+		if forms.is_valid():
+			forms.save()
+			return HttpResponse("El registro se actualizó correctamente.")
+	else:
+		forms=FormVehiculo(instance=dato)
+	return render(request,'producto/EditarVehiculo.html',{'forms':forms,'dato':dato})
+
+def EliminarVehiculo(request, id):
+	dato=Vehiculo.objects.get(id=int(id))
+	return render(request,'producto/EliminarVehiculo.html',{'dato':dato})
+def Eliminar_vehiculo(request, id):
+	dato=Vehiculo.objects.get(id=int(id))
+	Vehiculo.objects.filter(id=int(id)).update(estado=False)
+	return HttpResponse("Se dió de baja la información:   %s"%(dato.Placa))
+
+def AltaVehiculo(request, id):
+	dato=Vehiculo.objects.get(id=int(id))
+	return render(request,'producto/AltaVehiculo.html',{'dato':dato})
+def recuperarVehiculo(request, id):
+	dato=Vehiculo.objects.get(id=int(id))
+	Vehiculo.objects.filter(id=int(id)).update(estado=True)
+	return HttpResponse("Se recuperó la información:   %s  correctamente"%(dato.Placa))
+
 

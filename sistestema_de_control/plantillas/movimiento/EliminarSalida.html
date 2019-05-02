@@ -1,0 +1,18 @@
+<div class="table-responsive">
+	<li>Está seguro de eliminar la información: <strong>{{dato.Movil}}</strong>?<br>
+		<strong>Nota: tambien se eliminaran, todos las salidas que pertenecen a esta movil</strong>
+		<a href="#" onclick="Eliminar_Salida({{dato.id}})" class="btn btn-danger">Confirmar</a>
+	</li>
+</div>
+<script type="text/javascript">
+function Eliminar_Salida(ids){
+	$.ajax({
+	  	type:"GET",
+	  	url:"/Eliminar_Salida/"+ids+"/",
+	  	success:function(resp){
+	  		$(".modal-body").html(resp);
+	  		verSalidas();
+	  	}
+	});
+}
+</script>

@@ -6,9 +6,9 @@ from .models import *
 from .forms import *
 from django.contrib.auth.forms import User
 class UserForm(UserCreationForm):
-	username = forms.CharField(max_length=40,help_text="Nombre de usuario (No deve contener espacios) *")
-	password1 = forms.CharField(help_text="Recuerde este dato para proporcionar al personal *")
-	password2 = forms.CharField(help_text="Confirme la contraseña anterior *")
+	username = forms.CharField(max_length=40,help_text="Nombre de usuario (No deve contener espacios) *",label="Nombre de Usuario")
+	password1 = forms.CharField(help_text="Recuerde este dato para proporcionar al personal *", label="Contraseña")
+	password2 = forms.CharField(help_text="Confirme la contraseña anterior *", label="Confirmar")
 	first_name = forms.CharField(max_length=140, label="Nombre y Apellido *")
 	#email = forms.EmailField(label='Correo Elec.')
 	ci = forms.IntegerField(label="Nro. de Carnet. *")

@@ -1,0 +1,106 @@
+
+  <div class="btn-group">
+  		<button class="btn btn-success" data-toggle="modal" data-target="#exampleModal" 
+  		onclick="NewVehiculo()"><span class="fa fa-database">
+  			Crear nuevo movil
+  		</span></button>
+  </div>
+
+<div class="table-responsive">
+	<h4 colspan="8" align="center">LISTA DE MÓVILES REGISTRADOS EN EL SISTEMA</h4>
+<table class="table table-hover table-striped table-bordered dt-responsive datatable">
+<thead class="success">
+	<tr>
+		<th>NRO. DE PLACA</th>
+		<th>MOVIL</th>
+		<th>KILOMETRAJE</th>
+		<th>CONDUCTOR</th>
+
+		<th>FECHA REG.</th>
+
+		<th>ESTADO</th>
+		<th></th>
+	</tr>
+</thead>
+{% for i in datos %}
+		<tr>
+			<td>{{i.Placa|upper}}</td>
+			<td>{{i.Movil}}</td>
+			<td>{{i.Kilometraja}}</td>
+			<td>{{i.Conductor.get_full_name|upper}}</td>
+			<td>{{i.fecha_registro|date:"d/m/Y"}}</td>
+			<td>{% if i.estado %}
+				Alta
+				{% else %}
+				Baja
+				{% endif %}
+			</td>
+			<td>
+	        <div class="btn-group">
+	              <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle btn-sm" type="button" aria-expanded="false">Opciones <span class="caret"></span>
+	              </button>
+	              <ul role="menu" class="dropdown-menu">
+	              {% if i.estado %}
+	                   <li><a href="#" data-toggle="modal" onclick="EditarVehiculo({{i.id}})" data-target="#exampleModal">Editar</a></li>
+	                    <li><a href="#" data-toggle="modal" onclick="EliminarVehiculo({{i.id}})" data-target="#exampleModal">Eliminar</a></li> 
+	                {% else %}
+	                    <li><a href="#" data-toggle="modal" onclick="AltaVehiculo({{i.id}})" data-target="#exampleModal">Recuperar</a></li>
+	              {% endif %}
+	               
+	              </ul>
+	          </div>
+	      </td>
+		</tr>
+{% endfor %}
+<tr> <td colspan="2"><strong>Total Registros: </strong> {{total}}</td> </tr>
+</table>
+</div>
+<script type="text/javascript">
+function NewVehiculo(){
+	$("#exampleModal .modal-title").text("Registrar Nuevo Movil");
+        $.ajax({
+          type:'GET',
+          url:'/NewVehiculo/',
+          beforeSend:Espera,
+          success:function(resp){
+            $(".modal-body").html(resp);
+          }
+        });
+}
+function EditarVehiculo(ids){
+	$("#exampleModal .modal-title").text("Editar los datos del vehículo");
+        $.ajax({
+          type:'GET',
+          url:'/EditarVehiculo/'+ids+"/",
+          beforeSend:Espera,
+          success:function(resp){
+            $(".modal-body").html(resp);
+          }
+        });
+}
+function EliminarVehiculo(ids){
+	$("#exampleModal .modal-title").text("Editar los datos del vehículo");
+        $.ajax({
+          type:'GET',
+          url:'/EliminarVehiculo/'+ids+"/",
+          beforeSend:Espera,
+          success:function(resp){
+            $(".modal-body").html(resp);
+          }
+        });
+}
+function AltaVehiculo(ids){
+	$("#exampleModal .modal-title").text("Editar los datos del vehículo");
+        $.ajax({
+          type:'GET',
+          url:'/AltaVehiculo/'+ids+"/",
+          beforeSend:Espera,
+          success:function(resp){
+            $(".modal-body").html(resp);
+          }
+        });
+}
+function Espera(){
+		$(".modal-body").html('<img src="/static/img/log.gif" id="icono"></img><br>Procesando...');
+}
+</script>

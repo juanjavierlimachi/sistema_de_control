@@ -40,7 +40,6 @@ function dar_alta(ids){
 		<button title="Editar la información" onclick="EditProducto({{dato.id}})" class="btn btn-success" data-toggle="modal" data-target="#exampleModal"></span>Editar el producto</button>
 		<button title="Dar Baja" onclick="dar_baja({{dato.id}})" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal">Eliminar Producto</button>
 
-		<button title="Dar Alta" onclick="RegitrarBaja({{dato.id}})" class="btn btn-warning" data-toggle="modal" data-target="#exampleModal">Registrar Devolución</button>
 		{% else %}
 		<button title="Dar Alta" onclick="dar_alta({{dato.id}})" class="btn btn-warning" data-toggle="modal" data-target="#exampleModal">Recuperar Producto</button>
 		{% endif %}
@@ -50,21 +49,21 @@ function dar_alta(ids){
 </div>
 <div class="table-responsive">
 <table class="table table-hover table-striped">
-	<tr class="success"><td align="center" colspan="9"> Kardex Valorado Producto:   {{dato.Nombre_producto|upper}}</td></tr>
+	<tr class="success"><td align="center" colspan="9"> Kardex Valorado Producto:   <strong>{{dato.Nombre_producto|upper}}</strong></td></tr>
 	<tr>
-		<td colspan="2"><br>Precio de Venta: {{dato.Precio_venta}}</td>
-		<td><br>Precio Compra: {{dato.Precio_compra}}</td>
-		<td><br>Stock en almacen: {{dato.Stock}}</td>
-		<td colspan="2"><br>Valor en Bs: {{valor}}</td>
-		<td colspan="2"><br>Registrado Por: {{dato.Usuario.get_full_name|upper}}</td>
+		<td colspan="2"><br>Precio de Venta: <strong>{{dato.Precio_venta}}</strong></td>
+		<td><br>Precio Compra: <strong>{{dato.Precio_compra}}</strong></td>
+		<td><br>Stock en almacen: <strong>{{dato.Stock}}</strong></td>
+		<td colspan="2"><br>Valor en Bs: <strong>{{valor}}</strong></td>
+		<td colspan="2"><br>Registrado Por: <strong>{{dato.Usuario.get_full_name|upper}}</strong></td>
 	</tr>
 	<tr>
-		<td colspan="3"><br>Categoria: {{dato.Categoria.Nombre_categoria|upper}}</td>
-		<td colspan="4"><br>Fecha de Registro: {{dato.fecha_registro|date:"d-m-Y"}}</td>
+		<td colspan="3"><br>Categoria: <strong>{{dato.Categoria.Nombre_categoria|upper}}</strong></td>
+		<td colspan="4"><br>Fecha de Registro: <strong>{{dato.fecha_registro|date}}</strong></td>
 		<td colspan="2"><br>Estado:  {% if dato.estado %}
-				Activo
+				<strong>Activo</strong>
 			{% else %}
-				Baja
+				<strong style="color:red">Baja</strong>
 			{% endif %}</td>
 	</tr>
 

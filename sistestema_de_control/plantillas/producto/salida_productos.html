@@ -1,0 +1,39 @@
+{% load bootstrap %}
+<div class="table-responsive">
+    <p>
+<strong>{{producto.Nombre_producto|upper}}</strong> Stock <strong>{{producto.Stock}} {{producto.Unidad|upper}}S </strong> PREC VENTA <strong>{{producto.Precio_venta}} Bs.</strong>
+PREC COMPRA <strong> {{producto.Precio_compra}} Bs.</strong>
+    </p>
+	<form method="POST" role="form" id="demo-form2" data-parsley-validate class="form-horizontal form-label-left" >
+    {% csrf_token %}
+              {{forms|bootstrap_horizontal}}
+    <div class="form-group">
+      <div class="col-sm-10 col-sm-offset-2">
+        <button type="submit" class="btn btn-primary">Registrar</button>
+      </div>
+    </div>
+  </form>
+</div>
+<script type="text/javascript">
+    $('.table-responsive #demo-form2').submit(function(e){
+        e.preventDefault();
+        var dato=$(this).serialize();
+        $.ajax({
+            type:'POST',
+            url:'/salida_productos/'+{{producto.id}}+'/'+{{ids}}+'/',
+            data:dato,
+            success:function(resp){
+                $("#exampleModal .modal-title").text("");
+                $(".modal-body").html(resp);
+                //aqui agregar la url:NewOrden_detalle/id
+                $.ajax({
+                    type:'GET',
+                    url:'/Salida_detalle/'+{{ids}}+'/',
+                    success:function(res){
+                        $('.x_content').html(res);
+                    }
+                });
+            }
+        });
+    });
+</script>

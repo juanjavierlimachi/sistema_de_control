@@ -1,0 +1,39 @@
+{% load bootstrap %}
+<script type="text/javascript">
+ $('.table-responsive #demo-form2').submit(function(e){
+        e.preventDefault();
+        var dato=$(this).serialize();
+        $.ajax({
+            type:'POST',
+            url:'/NewSalida/',
+            data: dato,
+            error:Errores,
+            success:function(resp){
+                if(resp!=""){
+                    $.ajax({
+                        type:'GET',
+                        url:'/Salida_detalle/'+resp+'/',
+                        success:function(respp){
+                            $(".x_content").html(respp);
+                            $(".modal .close").click() 
+                        }
+                    });
+                }
+                else{$(".modal-body").html("Ocurrio un error intente nuevamente.");}
+            }
+        });
+    });
+ function Errores(){
+    alert("Ocurrio un error intente nuevamente.");
+ }
+</script>
+<div class="table-responsive">
+ <form method="POST" role="form" id="demo-form2" data-parsley-validate class="form-horizontal form-label-left" >
+    {% csrf_token %}
+        {{forms|bootstrap_horizontal}}
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Registrar</button>
+    </div>
+  </form>
+</div>

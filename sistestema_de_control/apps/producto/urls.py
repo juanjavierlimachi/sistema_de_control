@@ -19,7 +19,9 @@ urlpatterns = [
     
     url(r'^recuperarProveedor/(?P<id>\d+)/$', recuperarProveedor),
     url(r'^buscar_producto/$', buscar_producto),
-    url(r'^buscarProducto/(?P<id>\d+)/$', buscarProducto),   
+    url(r'^buscarProducto/(?P<id>\d+)/$', buscarProducto),
+    url(r'^buscar_produc_ingreso/$', buscar_produc_ingreso),
+    url(r'^buscarProductoParaIngreso/(?P<id>\d+)/$', buscarProductoParaIngreso),
     url(r'^EditProducto/(?P<id>\d+)/$', EditProducto),
     url(r'^EditCategorias/(?P<id>\d+)/$', EditCategorias),
     url(r'^EliminarCategorias/(?P<id>\d+)/$', EliminarCategorias),
@@ -32,6 +34,15 @@ urlpatterns = [
     url(r'^AltaCategorias/(?P<id>\d+)/$', AltaCategorias),
     
     url(r'^recuperarCategoria/(?P<id>\d+)/$', recuperarCategoria),
+    url(r'^verVehiculos/$', verVehiculos),
     
+    url(r'^NewVehiculo/$', NewVehiculo),
     
+    url(r'^EditarVehiculo/(?P<id>\d+)/$', EditarVehiculo),
+    
+    url(r'^EliminarVehiculo/(?P<id>\d+)/$', EliminarVehiculo),
+    url(r'^Eliminar_vehiculo/(?P<id>\d+)/$', Eliminar_vehiculo),
+    url(r'^AltaVehiculo/(?P<id>\d+)/$', AltaVehiculo),
+    
+    url(r'^recuperarVehiculo/(?P<id>\d+)/$', recuperarVehiculo),
 ]

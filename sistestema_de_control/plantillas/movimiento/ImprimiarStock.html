@@ -1,7 +1,11 @@
+<style type="text/css">
+
+</style>
 <div class="table-responsive">
 <h4 colspan="8" align="center">INVENTARIO DE PRODUCTOS REGISTRADOS</h4>
 <table class="table table-hover table-striped table-bordered dt-responsive datatable" border="1" style="font-size: 12px;">
 <thead>
+	<th style="width: 5%;"><br>Nro</th>
 	<th><br>PRODUCTO</th>
 	<th><br>UNIDAD</th>
 	<th><br>VENTA</th>
@@ -9,11 +13,12 @@
 	<th><br>COMPRA</th>
 	{% endif %}
 	<th><br>CATEGORIA</th>
-	<th style="width: 50px;" align="center"><br>STOCK</th>
-	<th><br>ESTADO</th>
+	<th style="width: 60px;" align="center"><br>STOCK</th>
+	<th style="width: 70px;"><br>ESTADO</th>
 </thead>
 {% for i in datos %}
 		<tr>
+			<td align="center"><br>{{forloop.counter}}</td>
 			<td align="center"><br>{{i.Nombre_producto|upper}}</td>
 			<td align="center"><br>{{i.Unidad|upper}}</td>
 			<td align="center"><br>{{i.Precio_venta}}</td>
@@ -36,6 +41,5 @@
 			
 		</tr>
 {% endfor %}
-<tr> <td colspan="2"><br><strong>Total Registros: </strong> {{total}}</td> </tr>
 </table>
 </div>

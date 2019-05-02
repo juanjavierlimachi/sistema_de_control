@@ -2,7 +2,7 @@
 <div class="table-responsive">
 <table class="table table-hover table-striped" id="table-ingresos">
 	<tr>
-		<td colspan="4" align="center">PLANILLA DE COMPRAS 
+		<td colspan="4" align="center">PLANILLA DE COMPRAS
 			{% if proveedor %}
 				<strong>A {{proveedor.Nombre_Razon_Social|upper}}</strong> 
 			{% endif %}
@@ -18,8 +18,8 @@
 				</a>
 			</td>
 			<td>NRO. DE COMPRA: <strong>{{i.Nro_de_Compra}}</strong></td>
-			<td>FECHA DE LA COMPRA. <strong>{{i.fecha_registro|date:"d/m/Y"}}</strong></td>
-			<td></td>
+			<td>FECHA DE LA COMPRA. <strong>{{i.fecha_registro|date}}</strong></td>
+			<td>REG. POR: <strong>{{i.Usuario.get_full_name|upper}}</strong></td>
 		</tr>
 		<tr>
 			<td colspan="2" align="center"><strong>Productos</strong></td>
@@ -56,6 +56,7 @@
 	{% for p in produc %}
 		{% if i.producto == p.id %}
 		<tr>
+			
 			<td>{{p.Nombre_producto|upper}}</td>
 			<td>{{i.Precio_unidad}}</td>
 			<td>{{i.Total}}</td>

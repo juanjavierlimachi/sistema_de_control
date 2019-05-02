@@ -1,0 +1,18 @@
+<div class="table-responsive">
+	<li>Está seguro de recuperar la información: <strong>{{dato.Placa|upper}}</strong>?
+		<a href="#" onclick="recuperarVehiculo({{dato.id}})" class="btn btn-success">Confirmar</a>
+	</li>
+</div>
+<script type="text/javascript">
+function recuperarVehiculo(ids){
+	$.ajax({
+	  	type:"GET",
+	  	url:"/recuperarVehiculo/"+ids+"/",
+	  	success:function(resp){
+	  		$(".modal-body").html(resp);
+	  		verVehiculos();
+	  	}
+	  });
+}
+
+</script>

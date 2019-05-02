@@ -7,19 +7,21 @@
   </div>
  {% endif %}
 <div class="table-responsive">
+	<h4 colspan="10" align="center">LISTA DE USUARIOS REGISTRADOS EN EL SISTEMA</h4>
 <table class="table table-hover table-striped">
-	<tr><td colspan="10" align="center">LISTA DE USUARIOS REGISTRADOS EN EL SISTEMA</td></tr>
+	<thead>
 		<tr class="success">
-			<td>Usuario</td>
-			<td>Nombre completo</td>
-			<td>Nro. CI.</td>
-			<td>Teléfono</td>
-			<td>Fecha de registro</td>
-			<td>Personal</td>
+			<th>Usuario</th>
+			<th>Nombre completo</th>
+			<th>Nro. CI.</th>
+			<th>Teléfono</th>
+			<th>Fecha de registro</th>
+			<th>Personal</th>
 			{% if user.is_superuser %}
-			<td>Estado</td>
+			<th>Estado</th>
 			{% endif %}
 		</tr>
+	</thead>
 {% for j in users %}
 <tr>
 	<td>{{j.username}}</td>

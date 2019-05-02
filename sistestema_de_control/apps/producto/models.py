@@ -6,7 +6,7 @@ from django.contrib.auth.forms import User
 # Create your models here.
 class Categoria(models.Model):
 	Nombre_categoria=models.CharField(max_length=100, unique=True)
-	fecha_registro = models.DateTimeField(auto_now=True)
+	fecha_registro = models.DateTimeField(auto_now_add=True)
 	estado=models.BooleanField(default=True)
 	def __unicode__(self):
 		return self.Nombre_categoria
@@ -16,9 +16,10 @@ class Producto(models.Model):
 	Precio_compra=models.FloatField()#precio de compra
 	Precio_venta=models.FloatField()#precio de venta
 	Stock=models.IntegerField(default=0)
+	total=models.IntegerField(default=0)
 	Usuario=models.ForeignKey(User)
 	Categoria=models.ForeignKey(Categoria)
-	fecha_registro = models.DateTimeField(auto_now=True)
+	fecha_registro = models.DateTimeField(auto_now_add=True)
 	estado=models.BooleanField(default=True)
 	def __unicode__(self):
 		return self.Nombre_producto
@@ -27,8 +28,8 @@ class Proveedor(models.Model):
 	Nit=models.PositiveIntegerField(unique=True)
 	Telefono=models.PositiveIntegerField(unique=True)
 	Direccion=models.CharField(max_length=150)
-	Email=models.EmailField(unique=True, blank=True, null=True)
-	fecha_registro = models.DateTimeField(auto_now=True)
+	Email=models.EmailField(unique=True, blank=True, null=True, help_text="Opcional")
+	fecha_registro = models.DateTimeField(auto_now_add=True)
 	estado=models.BooleanField(default=True)
 	Usuario=models.ForeignKey(User)
 	def __unicode__(self):

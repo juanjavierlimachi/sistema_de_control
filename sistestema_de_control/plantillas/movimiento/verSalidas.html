@@ -1,0 +1,145 @@
+<div class="page-title">
+	<div class="title_left">
+			{% if user.is_superuser %}
+<button class="btn btn-success" onclick="NewSalida()" data-toggle="modal" data-target="#exampleModal">Registrar nueva salida</button>
+			{% endif %}
+	<button class="btn btn-primary" onclick="ConsultarSalida()" data-toggle="modal" data-target="#exampleModal">Consultar planilla de salidas</button>
+              </div>
+
+              <div class="title_right">
+                <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                  <div class="input-group">
+          <form method='POST' id='Tipo' class="sidebar-form">
+          	{% csrf_token %}
+			        <div class="input-group">
+			          <input type="text" name="salida" id="salida_id" class="form-control" placeholder="Ingrese el nro. de salida" required>
+			              <span class="input-group-btn">
+			                <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+			                </button>
+			              </span>
+			        </div>
+			  </form>
+			  </div>
+	        </div>
+	      </div>
+	    </div>
+<div class="table-responsive">
+	<h4 colspan="6" align="center">SALIDA DE PRODUCTOS REGISTRADOS EN EL SISTEMA</h4>
+<table class="table table-hover table-striped table-bordered dt-responsive datatable" id="table-ingresos">
+<thead  class="success">
+		<th style="width: 3%;">Nro</th>
+		<th style="width: 3%;">CÓDIGO</th>
+		<th>FECHA DE SALIDA</th>
+		<th>CONDUCTOR</th>
+		<th style="width: 3%;">MOVIL</th>
+		<th>KILOMETRAJE</th>
+		<th>REG. POR</th>
+		
+</thead >
+
+{% for i in datos %}
+		<tr>
+			<td>
+				<a href="#" onclick="Salida_detalle({{i.id}})" title="Ir a detalles">
+					{{forloop.counter}}         <i class="fa fa-plus"></i>
+				</a>
+			</td>
+			<td align="center">{{i.id}}</td>
+			<td>{{i.fecha_salida|date}}</td>
+			<td>{{i.Movil.Conductor|upper}}</td>
+			<td> {{i.Movil}}</td>
+			<td>{% if i.Kilometraje %}
+				{{i.Kilometraje}}
+				{% endif %}
+			</td>
+			<td>{{i.Usuario.get_full_name|upper}}</td>
+		</tr>
+	{% empty %}
+	<tr> <td colspan="6" align="center"><strong>No se encontró registros</strong></td> </tr>
+{% endfor %}
+</table>
+</div>
+<script type="text/javascript">
+function Salida_detalle(ids){
+	$.ajax({
+		type:'GET',
+		url:'/Salida_detalle/'+ids+'/',
+		beforeSend:Espera,
+		success:function(res){
+			$('.x_content').html(res);
+		}
+	});
+}
+function ConsultarSalida(){
+	 $("#exampleModal .modal-title").text("Realizar consultas avanzadas");
+	$.ajax({
+		type:'GET',
+		url:'/filtar_salidas/',
+		success:function(res){
+			 $(".modal-body").html(res);
+		}
+	});
+}
+
+function InprimirSalidas(){
+	var inicio = $("#ini").val();
+	var fin = $("#fin").val();
+	var proveedor = $("#user").val();
+	var usuario = $("#usuario").val();
+	if(inicio=='' || fin =='' || !isNaN(inicio) || !isNaN(fin)){
+		alert("Por favor Ingrese la fecha correctamente.");
+		$("#ini").focus();
+		return false
+	}
+	else{
+		var ii =inicio.split('/');//la conveti en un array
+		var a = ii[0]+"-"+ii[1]+"-"+ii[2];
+		var ff = fin.split('/')
+		var b = ff[0]+"-"+ff[1]+"-"+ff[2];
+		window.open("/ImprimiarSalidas/"+usuario+"/"+proveedor+"/"+a+"/"+b+"/");
+	}
+}
+function NewSalida(){
+	$("#exampleModal .modal-title").text("Registrar salida de productos");
+	$.ajax({
+	      type:"GET",
+	      url:"/NewSalida/",
+	      success:function(resp){
+	        $(".modal-body").html(resp);
+	      }
+	  });
+}
+
+$(document).ready(Sheart);
+    function Sheart(){ 
+      var tbuscar=$("#salida_id").attr('autocomplete','off');
+      tbuscar.keypress(buscarSalida);
+  }
+ function buscarSalida(){
+    $.ajax({
+        type:'GET',
+        url:'/buscarSalida/',
+        data:$("#salida_id").serialize(),
+        success:resultado,
+        error:errores
+    });
+}
+$("#Tipo").on("submit",function(e){
+        e.preventDefault();
+          $.ajax({
+              type:"POST",
+              url:"/buscarSalida/",
+              data:$("#salida_id").serialize(),
+              success:resultado,
+              error:errores
+          });
+      });
+function resultado(data){
+    $(".table-responsive").fadeIn("slow");
+    console.log(data);
+    $(".table-responsive").html(data);
+}
+function errores(){
+    console.log("Error");
+}
+</script>

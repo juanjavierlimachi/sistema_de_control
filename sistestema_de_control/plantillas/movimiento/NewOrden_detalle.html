@@ -64,39 +64,41 @@ function EliminarCompra(ids){
   		onclick="EliminarCompra({{dato.id}})"><span class="fa fa-database">
   			Eliminar toda la compra
   		</span></button>
-
 </div>
 <div class="table-responsive">
 <table class="table table-hover table-striped">
 	<tr class="success"><td align="center" colspan="5"> DETALLES DE LA COMPRA NRO:  <strong>{{dato.Nro_de_Compra}}</strong></td></tr>
 	<tr>
-		<td colspan="2">RESPONSABLE: {{dato.Responsable|upper}}</td>
-		<td>PROVEEDOR: {{dato.proveedor|upper}}</td>
-		<td colspan="2">Registrado Por: {{dato.Usuario.get_full_name|upper}}</td>
+		<td colspan="2">RESPONSABLE: <strong>{{dato.Responsable|upper}}</strong></td>
+		<td>PROVEEDOR: <strong>{{dato.proveedor|upper}}</strong></td>
+		<td colspan="2">Registrado Por: <strong>{{dato.Usuario.get_full_name|upper}}</strong></td>
 	</tr>	
 	<tr>
-		<td colspan="4">Fecha de la compra: {{dato.fecha_registro|date}}</td>
+		<td colspan="4">Fecha de la compra: <strong>{{dato.fecha_registro|date}}</strong></td>
 	</tr>
 	<tr>
-		<td colspan="4">CORTESIA:  {{dato.Cortesia}}</td>
+		<td colspan="4">CORTESIA:  <strong>{{dato.Cortesia}}</strong></td>
 	</tr>
 </table>
 </div>
 <!-- lista de ingresos de productos para la compra -->
 <div class="table-responsive">
-<table class="table table-hover table-striped" id="table-ingresos">
-	<tr><td colspan="10" align="center">LISTA DE PRODUCTOS COMPRADOS</td></tr>
-<tr class="success">
-	<td>PRODUCTO</td>
-	<td>CANTIDAD</td>
-	<td>PREC. UNI.</td>
-	<td>TOTAL</td>
-	<td>FECHA VENC.</td>
-	<td>FECHA REG.</td>
-	<td></td>
-</tr>
+	<h4 colspan="10" align="center">LISTA DE PRODUCTOS COMPRADOS</h4>
+<table class="table table-hover table-striped table-bordered dt-responsive datatable" id="table-ingresos">
+<thead class="success">
+	<th style="width: 2%;"></th>
+	<th>PRODUCTO</th>
+	<th>CANTIDAD</th>
+	<th>PREC. UNI.</th>
+	<th>TOTAL</th>
+	<th>FECHA VENC.</th>
+	<th>FECHA REG.</th>
+	<th></th>
+</thead>
 {% for i in dato.ingreso.all %}
+
 		<tr>
+			<td>{{forloop.counter}}</td>
 			<td>{{i.producto.Nombre_producto|upper}}</td>
 			<td>{{i.cantidad}}</td>
 			<td>{{i.Precio_unidad}}</td>
@@ -119,14 +121,15 @@ function EliminarCompra(ids){
 		</tr>
 {% endfor %}
 <tr>
- <td>Total:<strong>{{total}} </strong></td>
+ <td colspan="2">Total:<strong>{{total}} </strong></td>
 		<td><strong>{{dato.Total_paquetes}}</strong></td>
 		<td></td>
-		<td><strong>{{dato.Total_sin_descuento}}</strong></td>
+		<td><strong>{{dato.Total_a_pagar}}</strong></td>
  </tr>
  <tr>
-<td>Descuento 18%: </td><td><strong>{{dato.descuento}}</strong></td>
+<td colspan="2">Descuento 18%: </td><td><strong>{{dato.descuento}}</strong></td>
 <td>Total a cancelar: </td><td><strong>{{dato.toto_pago}}</strong></td>
  </tr>
+ 
 </table>
 </div>

@@ -1,7 +1,8 @@
 {% load bootstrap %}
 <div class="table-responsive">
     <p>
-<strong>{{producto.Nombre_producto|upper}}</strong> Unidad: {{producto.Unidad}}- Stock:  {{producto.Stock}} PRECIO DE VENTA: {{producto.Precio_venta}}
+<strong>{{producto.Nombre_producto|upper}}</strong> Stock <strong>{{producto.Stock}} {{producto.Unidad|upper}}S </strong> PREC VENTA <strong>{{producto.Precio_venta}} Bs.</strong>
+PREC COMPRA <strong> {{producto.Precio_compra}} Bs.</strong>
     </p>
 	<form method="POST" role="form" id="demo-form2" data-parsley-validate class="form-horizontal form-label-left" >
     {% csrf_token %}

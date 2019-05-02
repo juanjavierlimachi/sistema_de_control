@@ -1,0 +1,114 @@
+<script type="text/javascript">
+$("#demo-form2").on("submit",function(e){
+        e.preventDefault();
+        var inicio = $("#ini").val();
+        var fin = $("#fin").val();
+        if (Date.parse(inicio)> Date.parse(fin)){
+        	alert("Error: la fecha inicio de deve ser Maryor a la fecha final");
+        }
+        else{
+        	var datos=$(this).serialize();
+	          $.ajax({
+	              type:"POST",
+	              url:"/consuta_por_fecha_salidas/",
+	              data:datos,
+	              success:function(resp){
+	                $(".table-responsive").fadeIn("slow");
+	                $(".table-responsive").html(resp);
+	                $(".modal .close").click() 
+	              }
+	          });
+         }
+      });
+$( function() {
+    $( "#ini" ).datepicker({
+    	prevText: '<Ant',
+		 nextText: 'Sig>',
+		 currentText: 'Hoy',
+		 monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+		 monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+		 dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+		 dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
+		 dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sá'],
+		 weekHeader: 'Sm',
+		 dateFormat: 'dd/mm/yy',
+		 firstDay: 1,
+		 isRTL: false,
+		 showMonthAfterYear: false,
+		 yearSuffix: ''
+    });
+    $( "#fin" ).datepicker({
+    	prevText: '<Ant',
+		 nextText: 'Sig>',
+		 currentText: 'Hoy',
+		 monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+		 monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+		 dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+		 dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
+		 dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sá'],
+		 weekHeader: 'Sm',
+		 dateFormat: 'dd/mm/yy',
+		 firstDay: 1,
+		 isRTL: false,
+		 showMonthAfterYear: false,
+		 yearSuffix: ''
+    });
+  });
+
+function InprimirSalida(){
+	  var inicio = $("#ini").val();
+	  var fin = $("#fin").val();
+	  var user = $("#user").val();//proveedores
+	  var usuario = $("#usuario").val();//usuarios
+	  if(inicio=='' || fin =='' || !isNaN(inicio) || !isNaN(fin) ){
+	    alert("Por favor Ingrese la fecha correctamente.");
+	    $("#ini").focus();
+	    return false
+	  }
+	  else{
+	    var ii =inicio.split('/');//la conveti en un array
+	    var a = ii[0]+"-"+ii[1]+"-"+ii[2];
+	    var ff = fin.split('/');
+	    var b = ff[0]+"-"+ff[1]+"-"+ff[2];
+	    window.open("/ReportesSalidas/"+usuario+"/"+user+"/"+a+"/"+b+"/");
+	  }
+}
+</script>
+ <form method="POST" role="form" id="demo-form2" data-parsley-validate class="form-horizontal form-label-left" >{% csrf_token %}
+ 	<div class="form-group">
+      <div class="col-sm-10 col-sm-offset-2">
+	   <input type="text" name="inicio" id="ini" autocomplete="off" placeholder="(Desde) DD/MM/AA" class="form-control" title="Ingrese una fecha" required/>
+	 	</div>
+	 </div>
+	 <div class="form-group">
+      <div class="col-sm-10 col-sm-offset-2">
+	   <input type="text" name="final" id="fin" autocomplete="off" placeholder="(Hasta) DD/MM/AA" class="form-control" title="Ingrese una fecha" required/>
+		</div>
+	</div>
+	<div class="form-group">
+      <div class="col-sm-10 col-sm-offset-2">
+	    <select name="user" id="user" class="form-control" required>
+	    	<option value="0">TODOS LOS VEHÍCULOS</option>
+	    	{% for i in proveedores %}
+	    	<option value="{{i.id}}">{{i.Movil}}</option>
+	    	{% endfor %}
+	    </select>
+	    </div>
+	</div>
+	 <div class="form-group">
+      <div class="col-sm-10 col-sm-offset-2">
+	    <select name="usuario" id="usuario" class="form-control" required>
+	    	<option value="0">TODOS LOS USUARIOS</option>
+	    	{% for i in user %}
+	    	<option value="{{i.id}}">{{i.get_full_name|upper}}</option>
+	    	{% endfor %}
+	    </select>
+	    </div>
+	</div>
+	     <div class="form-group">
+	      <div class="col-sm-10 col-sm-offset-2">
+	        <button type="submit" class="btn btn-primary">Filtrar datos</button>
+	        <a type="button" onclick="InprimirSalida()" class="btn btn-warning">Imprimir</a>
+	      </div>
+	    </div>
+	</form>	

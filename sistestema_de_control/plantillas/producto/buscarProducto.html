@@ -17,7 +17,7 @@
 {% for i in resultados %}
 <li class="aa">
 	<a href="/ingresa_productos/{{i.id}}/{{ids}}">
-	<strong>{{i.Nombre_producto|upper}} Unidad: {{i.Unidad}} - Stock: {{i.Stock}} PRECIO DE VENTA: {{i.Precio_venta}} </strong>
+	<strong>Cod:{{i.id}}-{{i.Nombre_producto|upper}} Stock: {{i.Stock}} {{i.Unidad}}s PRECIO DE VENTA: {{i.Precio_venta}} </strong>
 	</a>
 </li>
 {% empty %}

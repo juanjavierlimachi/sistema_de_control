@@ -16,19 +16,19 @@
 			<td colspan="2" align="center"><br>FECHA DE LA COMPRA. <strong>{{i.fecha_registro|date:"d/m/Y"}}</strong></td>
 		</tr>
 		<tr>
-			<td align="center"><br><strong>Productos</strong></td>
+			<td align="center" colspan="2"><br><strong>Productos</strong></td>
 			<td align="center"><br><strong>Cantidad</strong></td>
 			<td align="center"><br><strong>Total</strong></td>
 		</tr>
 		{% for j in i.ingreso.all %}
 		<tr>
-			<td align="center"><br>{{j.producto|upper}}</td>
+			<td align="center" colspan="2"><br>{{j.producto|upper}}</td>
 			<td align="center"><br>{{j.cantidad}}</td>
-			<td align="center"><br>{{j.total}}</td>
+			<td align="center" ><br>{{j.total}}</td>
 		</tr>
 		{% endfor %}
 		<tr>
-			<td ><br><strong>Totales</strong></td><td></td>
+			<td colspan="2" align="center"><br><strong>Totales</strong></td>
 			<td align="center"><br><strong>{{i.Total_paquetes}}</strong></td>
 			<td align="center"><br><strong>{{i.Total_sin_descuento}}</strong></td>
 		</tr>

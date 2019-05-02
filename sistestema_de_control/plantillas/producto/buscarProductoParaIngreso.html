@@ -1,0 +1,25 @@
+<script type="text/javascript">
+	$(".aa a").on('click',EscogidoSalida);
+	function EscogidoSalida(e){
+		$("#exampleModal .modal-title").text("Registrar nueva salida de producto");
+		e.preventDefault();
+		var ulrs=$(this).attr("href");
+		$.ajax({
+			type:'GET',
+			url:ulrs,
+			success:function(resp){
+				$(".modal-body").html(resp);
+
+			}
+		});
+	}
+</script>
+{% for i in resultados %}
+<li class="aa">
+	<a href="/salida_productos/{{i.id}}/{{ids}}">
+	<strong>Cod:{{i.id}}-{{i.Nombre_producto|upper}} Stock: {{i.Stock}} {{i.Unidad}}s PRECIO DE VENTA: {{i.Precio_venta}} </strong>
+	</a>
+</li>
+{% empty %}
+<strong><a href="#" style="color:red">No se encontró coincidencias ó esta en baja, busque por otro dato.</a></strong>
+{% endfor %}

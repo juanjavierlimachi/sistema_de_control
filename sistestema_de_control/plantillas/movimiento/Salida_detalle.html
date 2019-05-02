@@ -1,0 +1,135 @@
+<script type="text/javascript">
+function SalidaProducto(ids){
+	$("#exampleModal .modal-title").text("Busque el producto para realizar la salida.");
+	$.ajax({
+		type:'GET',
+		url:'/buscar_produc_ingreso/',
+		data:{'ids':ids},
+		success:function(res){
+			$('.modal-body').html(res);
+		}
+	});
+}
+function EditSalida(ids){
+	$("#exampleModal .modal-title").text("Editar los datos primarios de la salida");
+	$.ajax({
+		type:'GET',
+		url:'/EditSalida/'+ids+'/',
+		success:function(res){
+			$('.modal-body').html(res);
+		}
+	});
+}
+function EditarProductosDeSalida(ids){
+	$("#exampleModal .modal-title").text("Editar el ingreso");
+	$.ajax({
+		type:'GET',
+		url:'/EditarProductosDeSalida/'+ids+'/',
+		success:function(res){
+			$('.modal-body').html(res);
+		}
+	});
+}
+function EliminarProductosDeSalida(ids){
+	$("#exampleModal .modal-title").text("Eliminar este ingreso de la lista");
+	$.ajax({
+		type:'GET',
+		url:'/EliminarProductosDeSalida/'+ids+'/',
+		success:function(res){
+			$('.modal-body').html(res);
+		}
+	});
+}
+function EliminarSalida(ids){
+	$("#exampleModal .modal-title").text("Eliminar toda la compra");
+	$.ajax({
+		type:'GET',
+		url:'/EliminarSalida/'+ids+'/',
+		success:function(res){
+			$('.modal-body').html(res);
+		}
+	});
+}
+</script>
+<div class="btn-group">
+<button class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" 
+  		onclick="SalidaProducto({{dato.id}})"><span class="fa fa-database">
+  			Registrar los productos para esta salida
+  		</span></button>
+ <button class="btn btn-warning" data-toggle="modal" data-target="#exampleModal" 
+  		onclick="EditSalida({{dato.id}})"><span class="fa fa-database">
+  			Editar movil de salida
+  		</span></button>
+ <button class="btn btn-danger" data-toggle="modal" data-target="#exampleModal" 
+  		onclick="EliminarSalida({{dato.id}})"><span class="fa fa-database">
+  			Eliminar toda la salida
+  		</span></button>
+
+</div>
+<div class="table-responsive">
+<table class="table table-hover table-striped">
+	<tr class="success"><td align="center" colspan="5"> DETALLES DE LA SALIDA MOVIL:  <strong>{{dato.Movil}}</strong></td></tr>
+	<tr>
+		<td colspan="2">RESPONSABLE: <strong>{{dato.Movil.Conductor.get_full_name|upper}}</strong></td>
+		<td>Estado: {% if dato.estado %}
+					<strong>Activo</strong>
+					{% else %}
+					<strong>Inactivo</strong>
+				{% endif %}
+		</td>
+		<td colspan="2">Registrado Por: <strong>{{dato.Usuario.get_full_name|upper}}</strong></td>
+	</tr>	
+	<tr>
+		<td colspan="2">Fecha de la salida: <strong>{{dato.fecha_salida|date}}</strong></td>
+		<td colspan="2">Kilometraje: <strong>{{dato.Kilometraje}}</strong></td>
+	</tr>
+</table>
+</div>
+<!-- lista de ingresos de productos para la compra -->
+<div class="table-responsive">
+	<h4 colspan="10" align="center">LISTA DE SALIDA DE PRODUCTOS</h4>
+<table class="table table-hover table-striped table-bordered dt-responsive datatable" id="table-ingresos">
+<thead class="success">
+	<th style="width: 2%;"></th>
+	<th>PRODUCTO</th>
+	<th>CANTIDAD</th>
+	<th>PREC. UNI.</th>
+	<th>TOTAL</th>
+	<th>FECHA REG.</th>
+	<th></th>
+</thead>
+{% for i in dato.salidas.all %}
+		<tr>
+			<td>{{forloop.counter}}</td>
+			<td>{{i.producto.Nombre_producto|upper}}</td>
+			<td>{{i.cantidad}}</td>
+			<td>{{i.Precio_venta}}</td>
+			<td>{{i.total}}</td>
+			<td>{{i.fecha_registro|date:"d-m-Y"}}</td>
+			<td>
+				<div class="btn-group">
+                    <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle btn-sm" type="button" aria-expanded="false">Opciones <span class="caret"></span>
+                    </button>
+                    <ul role="menu" class="dropdown-menu">
+                    {% if i.estado %}
+                      <li><a href="#" onclick="EditarProductosDeSalida({{i.id}})" data-toggle="modal" data-target="#exampleModal">Editar</a></li>
+                      <li><a href="#" onclick="EliminarProductosDeSalida({{i.id}})" data-toggle="modal" data-target="#exampleModal">Eliminar</a></li> 
+                      
+                      {% endif %}
+                    </ul>
+                  </div>
+             </td>
+		</tr>
+{% endfor %}
+<tr>
+ <td colspan="2">Total:<strong>{{total}} </strong></td>
+		<td><strong>{{dato.Total}}</strong></td>
+		<td></td>
+		<td><strong>{{dato.Total_a_pagar}}</strong></td>
+ </tr>
+ <tr>
+<td colspan="2">Descuento 18%: </td><td><strong>{{dato.descuento}}</strong></td>
+<td>Total a cancelar: </td><td><strong>{{dato.toto_pago}}</strong></td>
+ </tr>
+</table>
+</div>
