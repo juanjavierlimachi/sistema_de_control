@@ -36,12 +36,15 @@ function errores(){
 <div class="table-responsive">
 <form method='POST' id='Tipo' class="sidebar-form">{% csrf_token %}
         <div class="input-group">
-          <input type="text" name="producto" id="producto_id" class="form-control" placeholder="Escriba el nombre del producto" required>
+          <input type="text" name="producto" id="producto_id" class="form-control" placeholder="Buscar un producto" required>
               <span class="input-group-btn">
                 <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
                 </button>
               </span>
         </div>
+    <p class="help-block">
+                    Busque por Código ó Nombre del producto
+                </p>
   </form>
 </div>
 <div id="pro"></div>

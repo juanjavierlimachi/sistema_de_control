@@ -13,8 +13,8 @@ class Categoria(models.Model):
 class Producto(models.Model):
 	Nombre_producto=models.CharField(max_length=150, unique=True)
 	Unidad=models.CharField(max_length=50)
-	Precio_compra=models.FloatField()#precio de compra
-	Precio_venta=models.FloatField()#precio de venta
+	Precio_compra=models.FloatField(help_text="Ingrese el precio al que compró")#precio de compra
+	Precio_venta=models.FloatField(help_text="Ingrese el precio al que venderá")#precio de venta
 	Stock=models.IntegerField(default=0)
 	total=models.IntegerField(default=0)
 	Usuario=models.ForeignKey(User)

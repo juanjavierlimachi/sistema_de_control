@@ -8,7 +8,7 @@ from django.db import models
 
 # Create your models here.
 class IngresoProducto(models.Model):
-	cantidad=models.PositiveIntegerField()
+	cantidad=models.PositiveIntegerField(help_text="Ingrese la cantidad")
 	Precio_unidad=models.FloatField()
 	total=models.FloatField()
 	fecha_de_vencimiento=models.DateField()
@@ -49,7 +49,7 @@ class Vehiculo(models.Model):
 		return "%s"%(self.Movil)
 
 class SalidaProducto(models.Model):
-	cantidad=models.PositiveIntegerField()
+	cantidad=models.PositiveIntegerField(help_text="Ingrese la cantidad")
 	Precio_venta=models.FloatField()
 	total=models.FloatField()
 	producto=models.ForeignKey(Producto)
