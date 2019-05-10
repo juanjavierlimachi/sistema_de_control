@@ -1,7 +1,12 @@
 <div class="table-responsive">
 	<li>Está seguro de eliminar la información: <strong>{{dato.Nombre_producto}}</strong>?
-		<a href="#" onclick="Eliminar_producto({{dato.id}})" class="btn btn-danger">Confirmar</a>
+	
 	</li>
+
+	<div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <a href="#" onclick="Eliminar_producto({{dato.id}})" class="btn btn-danger">Confirmar</a>
+    </div>
 </div>
 <script type="text/javascript">
 function Eliminar_producto(ids){

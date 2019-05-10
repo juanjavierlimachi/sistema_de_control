@@ -30,3 +30,8 @@ class FormVehiculo(ModelForm):
 		model = Vehiculo
 		exclude=('estado',)
 
+	def __init__(self, *args, **kwargs):
+		#seleccionamos todos los usarios que son choferes
+		super(FormVehiculo, self).__init__(*args, **kwargs)
+		self.fields['Conductor'].queryset = User.objects.filter(is_superuser=False,is_active=True,is_staff=False)
+

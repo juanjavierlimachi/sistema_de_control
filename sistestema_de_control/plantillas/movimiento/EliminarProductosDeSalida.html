@@ -1,24 +1,24 @@
 <div class="table-responsive">
-	<li>Está seguro de eliminar el ingreso del producto: <strong>{{dato.producto.Nombre_producto}}</strong>?
+	<li>Está seguro de eliminar esta salida del producto: <strong>{{dato.producto.Nombre_producto}}</strong>?
 		
 	</li>
 
 	<div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-        <a href="#" onclick="Eliminar_ingreso({{dato.id}})" class="btn btn-danger">Confirmar</a>
+        <a href="#" onclick="Eliminar_salida({{dato.id}})" class="btn btn-danger">Confirmar</a>
     </div>
 </div>
 <script type="text/javascript">
-function Eliminar_ingreso(ids){
+function Eliminar_salida(ids){
 	$.ajax({
 	  	type:"GET",
-	  	url:"/Eliminar_ingreso/"+ids+"/",
+	  	url:"/Eliminar_salida/"+ids+"/",
 	  	success:function(resp){
 	  		$(".modal-body").html("<div class='alert alert-success' role='alert'>"+resp+"</div>");
 	  		$("#exampleModal .modal-title").text(" ");
 	  			$.ajax({
                     type:'GET',
-                    url:'/NewOrden_detalle/'+{{ids_deLACompra}}+'/',
+                    url:'/Salida_detalle/'+{{ids_deLACompra}}+'/',
                     success:function(res){
                         $('.x_content').html(res);
                     }

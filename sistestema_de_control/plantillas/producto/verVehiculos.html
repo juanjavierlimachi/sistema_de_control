@@ -8,8 +8,8 @@
 
 <div class="table-responsive">
 	<h4 colspan="8" align="center">LISTA DE MÓVILES REGISTRADOS EN EL SISTEMA</h4>
-<table class="table table-hover table-striped table-bordered dt-responsive datatable">
-<thead class="success">
+<table class="table table-hover table-striped table-bordered dt-responsive datatable" id="example">
+<thead>
 	<tr>
 		<th>NRO. DE PLACA</th>
 		<th>MOVIL</th>
@@ -103,4 +103,7 @@ function AltaVehiculo(ids){
 function Espera(){
 		$(".modal-body").html('<img src="/static/img/log.gif" id="icono"></img><br>Procesando...');
 }
+/*$(document).ready(function() {
+    $('#example').DataTable();
+} );*/
 </script>

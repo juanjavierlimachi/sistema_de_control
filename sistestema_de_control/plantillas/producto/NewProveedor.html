@@ -8,7 +8,7 @@
             url:'/NewProveedor/',
             data: dato,
             success:function(resp){
-                $(".modal-body").html(resp);
+                $(".modal-body").html("<div class='alert alert-success' role='alert'>"+resp+"</div>");
                 VerProveedores();
             }
         });

@@ -1,0 +1,188 @@
+
+<style type="text/css">
+#controles{left: 30px}
+#controles select{margin: inherit;width: 35%;}
+#controles form{width: 100%;float: left;margin-left:  0px;}
+#controles form input{width: 25%;float: left;}
+#controles .btn-primary{float: right;
+    margin-top: -35px;}
+ #controles .btn-success{float: right;
+ 	margin-right: -80px;
+    margin-top: -35px;}
+</style>
+<script type="text/javascript">
+$("#Busqueda").on("submit",function(e){
+        e.preventDefault();
+        var inicio = $("#ini").val();
+        var fin = $("#fin").val();
+        if (Date.parse(inicio)> Date.parse(fin)){
+        	alert("Error: La Fecha Inicio No pueder ser Mayor a la Fecha Final.");
+        }
+        else{
+        	var datos=$(this).serialize();
+        //alert(datos);
+          $.ajax({
+              type:"POST",
+              url:"/ReporteGeneral/",
+              data:datos,
+              success:function(resp){
+                $(".table-responsive").fadeIn("slow");
+                //alert(resp);
+                //$("#categorias").html(resp);
+                $(".table-responsive").html(resp);
+	           }
+	       });
+        }
+        
+      });
+$( function() {
+    $( "#ini" ).datepicker({
+    	prevText: '<Ant',
+		 nextText: 'Sig>',
+		 currentText: 'Hoy',
+		 monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+		 monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+		 dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+		 dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
+		 dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sá'],
+		 weekHeader: 'Sm',
+		 dateFormat: 'dd/mm/yy',
+		 firstDay: 1,
+		 isRTL: false,
+		 showMonthAfterYear: false,
+		 yearSuffix: ''
+    });
+    $( "#fin" ).datepicker({
+    	prevText: '<Ant',
+		 nextText: 'Sig>',
+		 currentText: 'Hoy',
+		 monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+		 monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+		 dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+		 dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
+		 dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sá'],
+		 weekHeader: 'Sm',
+		 dateFormat: 'dd/mm/yy',
+		 firstDay: 1,
+		 isRTL: false,
+		 showMonthAfterYear: false,
+		 yearSuffix: ''
+    });
+  } );
+function InprimirReporteGeneral(){
+	var inicio = $("#ini").val();
+	var fin = $("#fin").val();
+	var user = $("#usuario").val();
+	if(inicio =='' || fin =='' || !isNaN(inicio) || !isNaN(fin) ){
+		alert("Por favor Ingrese la fecha correctamente.");
+		$("#ini").focus();
+		return false
+	}
+	else{
+			var ii =inicio.split('/');//la conveti en un array
+			var a = ii[0]+"-"+ii[1]+"-"+ii[2];
+			var ff = fin.split('/')
+			var b = ff[0]+"-"+ff[1]+"-"+ff[2];
+			window.open("/InprimirReporteGeneral/"+user+"/"+a+"/"+b+"/");
+		}
+}
+</script>
+<div id="controles">
+	<div class="btn-group">
+	<form method="POST" id="Busqueda">{% csrf_token %}
+	
+	    <input type="text" name="inicio" id="ini" autocomplete="off" placeholder="(Desde) DD/MM/AA" class="form-control" title="Ingrese una fecha" required/>
+	  
+	    <input type="text" name="final" id="fin" autocomplete="off" placeholder="(Hasta) DD/MM/AA" class="form-control" title="Ingrese una fecha" required/>
+	    <select name="usuario" id="usuario" class="form-control" width="30%" required>
+	    	<option value="0">TODOS LOS USUARIOS</option>
+	    	{% for i in user %}
+	    	<option value="{{i.id}}">{{i.get_full_name|upper}}</option>
+	    	{% endfor %}
+	    </select>
+	    
+	    <button class="btn btn-primary">Consultar</button>
+	    <a href="#" button type="button" onclick="InprimirReporteGeneral()"class="btn btn-success">
+  Imprimir</a>
+	</form>
+	</div>
+</div>
+
+
+
+<div class="table-responsive">
+	<h2 align="center" colspan="4"><strong>REPORTE GENERAL DE INGRESOS</strong></h2>
+<table class="table table-hover table-striped table-bordered dt-responsive datatable" id="table-ingresos">
+<thead class="success">
+<tr>
+	
+	<th style="width: 2%;">COD</th>
+	<th>PRODUCTO</th>
+	<th align="center" style="width: 12%;">T. INGRESOS</th>
+	
+	<th>PRECIO	</th>
+	<th>CANTIDAD</th>
+	<th>GASTOS</th>
+</tr>
+</thead>
+{% for i in ingresos %}
+			{% for p in produc %}
+				{% if i.producto == p.id  %}
+				<tr>
+
+					<td style="width: 2%;">{{p.id}}</td>
+					<td>{{p.Nombre_producto|upper}}</td>
+					<td align="center" style="width: 12%;">{{i.Cantidad_ing}}</td>
+					<td>{{p.Precio_compra}}</td>
+					<td>{{i.Total}} {{p.Unidad}}s</td>
+					<td>{{i.pago}} Bs.</td>
+				</tr>
+				{% endif %}
+			{% endfor %}
+{% endfor %}
+<tr> 
+	<td colspan="2">Totales: <strong>{{t_ingresos}} </strong></td>
+	<td></td>
+	<td></td>
+	<td><strong>{{cantt}} Unidades</strong></td>
+	<td><strong>{{gastoss}} Bs.</strong></td>
+</tr>
+</table>
+
+	<h2 align="center" colspan="4"><strong>REPORTE GENERAL DE SALIDAS</strong></h2>
+<table class="table table-hover table-striped table-bordered dt-responsive datatable" id="table-ingresos">
+<thead class="success">
+<tr>
+	<th style="width: 2%;">COD</th>
+	<th>PRODUCTO</th>
+	<th align="center" style="width: 12%;">T. SALIDAS</th>
+	<th>PRECIO	</th>
+	<th>CANTIDAD</th>
+	<th>INGRESOS</th>
+</tr>
+</thead>
+{% for i in salidas %}
+			{% for p in produc %}
+				{% if i.producto == p.id  %}
+				<tr>
+					<td style="width: 2%;">{{p.id}}</td>
+					<td>{{p.Nombre_producto|upper}}</td>
+					
+					<td align="center" style="width: 12%;">{{i.Cantidad_sali}}</td>
+					<td>{{p.Precio_venta}}</td>
+
+					<td>{{i.Total}} {{p.Unidad}}s</td>
+					<td>{{i.pago}} Bs.</td>
+				</tr>
+				{% endif %}
+			{% endfor %}
+{% endfor %}
+<tr> 
+	<td colspan="2">Totales: <strong>{{t_ingresos}} </strong></td>
+	<td></td>
+	<td></td>
+	<td><strong>{{cant}} Unidades</strong></td>
+	<td><strong>{{gastos}} Bs.</strong></td>
+</tr>
+</table>
+</div>

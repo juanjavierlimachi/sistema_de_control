@@ -70,18 +70,19 @@ function EliminarSalida(ids){
 <table class="table table-hover table-striped">
 	<tr class="success"><td align="center" colspan="5"> DETALLES DE LA SALIDA MOVIL:  <strong>{{dato.Movil}}</strong></td></tr>
 	<tr>
-		<td colspan="2">RESPONSABLE: <strong>{{dato.Movil.Conductor.get_full_name|upper}}</strong></td>
+		<td colspan="2">CONDUCTOR <strong>{{dato.Movil.Conductor.get_full_name|upper}}</strong></td>
 		<td>Estado: {% if dato.estado %}
 					<strong>Activo</strong>
 					{% else %}
 					<strong>Inactivo</strong>
 				{% endif %}
 		</td>
-		<td colspan="2">Registrado Por: <strong>{{dato.Usuario.get_full_name|upper}}</strong></td>
+		<td colspan="2">REGISTRADO POR: <strong>{{dato.Usuario.get_full_name|upper}}</strong></td>
 	</tr>	
 	<tr>
-		<td colspan="2">Fecha de la salida: <strong>{{dato.fecha_salida|date}}</strong></td>
-		<td colspan="2">Kilometraje: <strong>{{dato.Kilometraje}}</strong></td>
+		<td colspan="2">FECHA DE SALIDA: <strong>{{dato.fecha_salida|date}}</strong></td>
+		<td><strong>CÓDIGO: {{dato.id}}</strong></td>
+		<td colspan="2">KILOMETRAJE: <strong>{% if dato.Kilometraje %}{{dato.Kilometraje}}{% endif %}</strong></td>
 	</tr>
 </table>
 </div>
@@ -92,6 +93,7 @@ function EliminarSalida(ids){
 <thead class="success">
 	<th style="width: 2%;"></th>
 	<th>PRODUCTO</th>
+	<th>COD</th>
 	<th>CANTIDAD</th>
 	<th>PREC. UNI.</th>
 	<th>TOTAL</th>
@@ -102,6 +104,7 @@ function EliminarSalida(ids){
 		<tr>
 			<td>{{forloop.counter}}</td>
 			<td>{{i.producto.Nombre_producto|upper}}</td>
+			<td>{{i.producto.id}}</td>
 			<td>{{i.cantidad}}</td>
 			<td>{{i.Precio_venta}}</td>
 			<td>{{i.total}}</td>
@@ -122,13 +125,13 @@ function EliminarSalida(ids){
 		</tr>
 {% endfor %}
 <tr>
- <td colspan="2">Total:<strong>{{total}} </strong></td>
+ <td colspan="3">Total:<strong>{{total}} </strong></td>
 		<td><strong>{{dato.Total}}</strong></td>
 		<td></td>
 		<td><strong>{{dato.Total_a_pagar}}</strong></td>
  </tr>
  <tr>
-<td colspan="2">Descuento 18%: </td><td><strong>{{dato.descuento}}</strong></td>
+<td colspan="3">Descuento 18%: </td><td><strong>{{dato.descuento}}</strong></td>
 <td>Total a cancelar: </td><td><strong>{{dato.toto_pago}}</strong></td>
  </tr>
 </table>

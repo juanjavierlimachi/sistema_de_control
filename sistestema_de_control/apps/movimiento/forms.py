@@ -25,3 +25,4 @@ class FormSalidaMovil(ModelForm):
 	class Meta:
 		model = SalidaProducto
 		exclude=('estado','Usuario','Precio_venta','total','producto','Movil',)
+		

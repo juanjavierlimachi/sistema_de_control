@@ -9,7 +9,7 @@
             data: dato,
             success:function(resp){
                 $("#exampleModal .modal-title").text("");
-                $(".modal-body").html(resp);
+                $(".modal-body").html("<div class='alert alert-success' role='alert'>"+resp+"</div>");
                 $.ajax({
                     type:'GET',
                     url:'/Salida_detalle/'+{{dato.id}}+'/',
@@ -25,10 +25,9 @@
  <form method="POST" role="form" id="demo-form2" data-parsley-validate class="form-horizontal form-label-left" >
     {% csrf_token %}
                 {{forms|bootstrap_horizontal}}
-    <div class="form-group">
-      <div class="col-sm-10 col-sm-offset-2">
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
         <button type="submit" class="btn btn-primary">Editar</button>
-      </div>
     </div>
   </form>
 </div>

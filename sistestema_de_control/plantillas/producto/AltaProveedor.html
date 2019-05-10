@@ -1,7 +1,11 @@
 <div class="table-responsive">
 	<li>Está seguro de recuperar la información: <strong>{{dato.Nombre_Razon_Social|upper}}</strong>?
-		<a href="#" onclick="RecuperarProveedor({{dato.id}})" class="btn btn-success">Confirmar</a>
+		
 	</li>
+	<div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <a href="#" onclick="RecuperarProveedor({{dato.id}})" class="btn btn-success">Confirmar</a>
+    </div>
 </div>
 <script type="text/javascript">
 function RecuperarProveedor(ids){

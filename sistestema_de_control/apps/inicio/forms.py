@@ -12,7 +12,7 @@ class UserForm(UserCreationForm):
 	first_name = forms.CharField(max_length=140, label="Nombre y Apellido *")
 	#email = forms.EmailField(label='Correo Elec.')
 	ci = forms.IntegerField(label="Nro. de Carnet. *")
-	telefono = forms.IntegerField(label="Teléfono/Celular *")
+	telefono = forms.IntegerField(label="Celular *")
 	def clean_ci(self):
 		ci=self.cleaned_data['ci']
 		if len(str(ci))>11 or len(str(ci))<=5:

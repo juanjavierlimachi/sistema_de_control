@@ -20,12 +20,12 @@
 			<td>{{i.Nombre_categoria}}</td>
 			
 			<td>{{i.fecha_registro|date}}</td>
-      <td>{% if i.estado %}
-              Alta
+      {% if i.estado %}
+              <td>Alta</td>
             {% else %}
-              Baja
+              <td style="color:red">Baja</td>
           {% endif %}
-      </td>
+      
 			<td>
         <div class="btn-group">
               <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle btn-sm" type="button" aria-expanded="false">Opciones <span class="caret"></span>

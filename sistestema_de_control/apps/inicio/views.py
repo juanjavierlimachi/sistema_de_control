@@ -116,6 +116,7 @@ def DasactivarUser(request):
 		return HttpResponse("Haga click en la casilla para Desactivar esta cuenta")
 def VolverHavilitar(request):
 	try:
+		
 		nombre=request.GET['nombre']
 		user=User.objects.get(username=nombre)
 		print user.id

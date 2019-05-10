@@ -10,21 +10,25 @@
                 <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
                   <div class="input-group">
           <form method='POST' id='Tipo' class="sidebar-form">
+
           	{% csrf_token %}
 			        <div class="input-group">
-			          <input type="text" name="salida" id="salida_id" class="form-control" placeholder="Ingrese el nro. de salida" required>
+			          <input type="text" name="salida" id="salida_id" class="form-control" placeholder="BUSCAR SALIDA" required>
 			              <span class="input-group-btn">
 			                <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
 			                </button>
 			              </span>
 			        </div>
+			        <p class="help-block">
+                    por código ó num. de movil
+                </p>
 			  </form>
 			  </div>
 	        </div>
 	      </div>
 	    </div>
 <div class="table-responsive">
-	<h4 colspan="6" align="center">SALIDA DE PRODUCTOS REGISTRADOS EN EL SISTEMA</h4>
+	<h4 colspan="6" align="center"><strong>SALIDA DE PRODUCTOS REGISTRADOS EN EL SISTEMA</strong></h4>
 <table class="table table-hover table-striped table-bordered dt-responsive datatable" id="table-ingresos">
 <thead  class="success">
 		<th style="width: 3%;">Nro</th>
@@ -124,12 +128,12 @@ $(document).ready(Sheart);
         error:errores
     });
 }
-$("#Tipo").on("submit",function(e){
+$("#Tipo").submit(function(e){
         e.preventDefault();
           $.ajax({
               type:"POST",
               url:"/buscarSalida/",
-              data:$("#salida_id").serialize(),
+              data:$(this).serialize(),
               success:resultado,
               error:errores
           });

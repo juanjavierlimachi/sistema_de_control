@@ -36,15 +36,27 @@ urlpatterns = [
     
     url(r'^buscarCompra/$', buscarCompra),
     
+    url(r'^buscarSalida/$', buscarSalida),
     url(r'^EditarProductosDeCompra/(?P<id>\d+)/$',EditarProductosDeCompra),
+    url(r'^EditarProductosDeSalida/(?P<id>\d+)/$',EditarProductosDeSalida),
     url(r'^EliminarProductosDeCompra/(?P<id>\d+)/$',EliminarProductosDeCompra),
+    
+    url(r'^EliminarProductosDeSalida/(?P<id>\d+)/$',EliminarProductosDeSalida),
     
     url(r'^EliminarCompra/(?P<id>\d+)/$',EliminarCompra),
     url(r'^Eliminar_Compra/(?P<id>\d+)/$',Eliminar_Compra),
     
-    url(r'^EliminarSalida/(?P<id>\d+)/$',EliminarSalida),
+    url(r'^EliminarSalida/(?P<id>\d+)/$',EliminarSalida), 
     
     url(r'^Eliminar_Salida/(?P<id>\d+)/$',Eliminar_Salida),
     url(r'^Eliminar_ingreso/(?P<id>\d+)/$',Eliminar_ingreso),
+    
+    url(r'^Eliminar_salida/(?P<id>\d+)/$',Eliminar_salida),
+    
+    url(r'^VerMovimientos/$', VerMovimientos),
+    
+    url(r'^ReporteGeneral/$', ReporteGeneral),
+    
+    url(r'^InprimirReporteGeneral/(?P<user>\d+)/(?P<inicio>[^/]+)/(?P<fin>[^/]+)/$',InprimirReporteGeneral),
     #url(r'^consuta_por_fecha/(?P<id_proveedor>\d+)/(?P<id_user>\d+)/(?P<inicio>[^/]+)/(?P<fin>[^/]+)/$',consuta_por_fecha),
 ]

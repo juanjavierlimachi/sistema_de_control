@@ -13,6 +13,7 @@
     	<option value="1">Menores ó iguales a 10</option>
     	<option value="2">Mayores a 10 y menores ó iguales a 50</option>
     	<option value="3">Mayores a 50 productos</option>
+    	<option value="4">Optener los productos en Baja</option>
     </select>
     <button class="btn btn-warning" type="button" href="#" onclick="ImprimirProducto()"><span class="fa fa-print">
   			Imprimir información
@@ -25,7 +26,7 @@
   </div>
 </div>
 <div class="table-responsive">
-<h4 colspan="8" align="center">INVENTARIO DE PRODUCTOS REGISTRADOS</h4>
+<h4 colspan="8" align="center"><strong>INVENTARIO DE PRODUCTOS REGISTRADOS</strong></h4>
 <table class="table table-hover table-striped table-bordered dt-responsive datatable" border=1>
 <thead>
 	<th style="width: 5%;">Nro</th>
@@ -67,9 +68,17 @@
 			<td>{{i.total}}</td>
 			<td align="center">{{i.id}}</td>
 		</tr>
+{% empty %}
+<tr>
+	<td><h4 colspan="8" align="center"><strong>No hay registros para esta consulta.</strong></h4></td>
+</tr>
 {% endfor %}
-<tr> <td colspan="3"><strong>Totales: </strong></td><td></td>
-	<td><strong>{{t_ventas}}</strong></td><td><strong>{{t_compras}}</strong></td> </tr>
+<tr> <td colspan="4"><strong>Totales: </strong></td>
+	<td><strong title="Total Ganancia">{{t_ventas}}</strong></td>
+	<td><strong title="Total Inverción">{{t_compras}}</strong></td>
+	<td><strong>{{stock}}</strong></td><td><strong>{{t}}</strong></td>
+
+</tr>
 </table>
 </div>
 <script type="text/javascript">

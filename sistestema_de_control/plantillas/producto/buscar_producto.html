@@ -14,12 +14,12 @@ $(document).ready(Sheart);
         error:errores
     });
 }
-$("#Tipo").on("submit",function(e){
+$("#Tipo").submit(function(e){
         e.preventDefault();
           $.ajax({
               type:"POST",
               url:"/buscarProducto/{{ids}}/",
-              data:$("#producto_id").serialize(),
+              data:$(this).serialize(),
               success:resultado,
               error:errores
           });
@@ -34,8 +34,7 @@ function errores(){
 }
 </script>
 <div class="table-responsive">
-<form method='POST' id='Tipo' class="sidebar-form">
-  {% csrf_token %}
+<form method="POST" id="Tipo" class="sidebar-form">{% csrf_token %}
         <div class="input-group">
           <input type="text" name="producto" id="producto_id" class="form-control" placeholder="Escriba el nombre del producto" required>
               <span class="input-group-btn">

@@ -1,19 +1,23 @@
-
 <div class="table-responsive">
-<table class="table table-hover table-striped" border="1">
+<table >
 	<tr>
-		<td colspan="4" align="center"><br>PLANILLA DE COMPRAS 
+		<td colspan="4" align="center"><h1>PLANILLA DE COMPRAS
+			 {% if usuario %}
+			 	<strong>DE: {{usuario.get_full_name|upper}}</strong>
+			 {% endif %}
 			{% if proveedor %}
 				<strong><br>A {{proveedor.Nombre_Razon_Social|upper}}</strong> 
 			{% endif %}
 			DESDE <strong>{{inicio|date:"d/m/Y"}} </strong> 
-			<strong>HASTA {{final|date:"d/m/Y"}}</strong>
+			<strong>HASTA {{final|date:"d/m/Y"}}</strong></h1>
 		</td>
 	</tr>
+</table>
+<table class="table table-hover table-striped" border="1" id="conpras">
 {% for i in datos %}
-		<tr class="success">
-			<td colspan="2" align="center"><br>NRO. DE COMPRA: <strong>{{i.Nro_de_Compra}}</strong></td>
-			<td colspan="2" align="center"><br>FECHA DE LA COMPRA. <strong>{{i.fecha_registro|date:"d/m/Y"}}</strong></td>
+		<tr class="success" background-color="red">
+			<td colspan="2" align="center" id="titulo"><br>NRO. DE COMPRA: <strong>{{i.Nro_de_Compra}}</strong></td>
+			<td colspan="2" align="center" id="titulo"><br>FECHA DE LA COMPRA. <strong>{{i.fecha_registro|date:"d/m/Y"}}</strong></td>
 		</tr>
 		<tr>
 			<td align="center" colspan="2"><br><strong>Productos</strong></td>
@@ -35,31 +39,54 @@
 	{% empty %}
 	<tr> <td colspan="4" align="center"><strong>No se encontró registros</strong></td> </tr>
 {% endfor %}
-</table><br>
-<table class="table table-hover table-striped" id="table-ingresos" style="width: 500px;float:left">
-<tr class="success"><td align="center"><strong>RESUMEN DE COSTOS</strong></td></tr>
-<tr> <td><strong>TOTAL COMPRAS: </strong> {{totalR}}</td> </tr>
-<tr><td><strong>TOTAL PAQUETES COMPRADOS: </strong> {{t_paquetes}} </td></tr>
-<tr><td><strong>MONTO SIN DESCUENTO: </strong> {{t_sin_descuento}} </td></tr>
-<tr><td><strong>DESCUENTO DEL 18%: </strong> {{descuento}} </td></tr>
-<tr><td><strong>TOTAL A CANCELAR: </strong> {{total}} </td></tr>
-<tr><td><strong>Reporte Generado Por:</strong> {{user.get_full_name}} </td></tr>
 </table>
-<table class="table table-hover table-striped" id="table-ingresos" style="width: 500px;">
-<tr class="success"><td align="center" colspan="4"><strong>RESUMEN DE PRODUCTOS</strong></td></tr>
-{% for i in productos_agrupados %}
-	{% for p in produc %}
-		{% if i.producto == p.id %}
-		<tr>
-			<td>{{p.Nombre_producto|upper}}</td>
-			<td>{{i.Precio_unidad}}</td>
-			<td>{{i.Total}}</td>
-			<td>{{i.pago}}</td>
-		</tr>
-		{% endif %}
-	{% endfor %}
-{% endfor %}
-<tr> <td colspan="2">Productos:<strong>{{totalPro}} </strong></td></tr>
+<br>
+<TABLE BORDER>
+	<TR>
+		<TD>
 
-</table>
+			<table width="300px" border=1 float="right" margin="auto" id="Rproducto" HEIGHT="250px">
+			<tr class="success"><td align="center" colspan="6"><strong>RESUMEN DE PRODUCTOS</strong></td></tr>
+			{% for i in productos_agrupados %}
+				{% for p in produc %}
+					{% if i.producto == p.id %}
+					<tr>
+						<td colspan="3">{{p.Nombre_producto|upper}}</td>
+						<td>{{p.Precio_compra}}</td>
+						<td>{{i.Total}}</td>
+						<td>{{i.pago}}</td>
+					</tr>
+					{% endif %}
+				{% endfor %}
+			{% endfor %}
+			<tr> <td colspan="6">Total: <strong>{{totalPro}} </strong> Productos</td></tr>
+		</table>
+		</TD>
+		<TD ROWSPAN=2></TD>
+		<TD>
+		<table width="300px" float="left" border=1 id="resultados">
+			<tr class="success"><td align="center"><strong>RESUMEN DE COSTOS</strong></td></tr>
+			<tr> <td><strong>TOTAL COMPRAS: </strong> {{totalR}}</td> </tr>
+			<tr><td><strong>TOTAL PAQUETES COMPRADOS: </strong> {{t_paquetes}} </td></tr>
+			<tr><td><strong>MONTO SIN DESCUENTO: </strong> {{t_sin_descuento}} </td></tr>
+			<tr><td><strong>DESCUENTO DEL 18%: </strong> {{descuento}} </td></tr>
+			<tr><td><strong>TOTAL A CANCELAR: </strong> {{total}} </td></tr>
+		</table>
+		</TD>
+	</TR>
+	<TR>
+		<TD> </TD>
+		 <TD></TD>
+	</TR>
+</TABLE>
+<style type="text/css" rel="stylesheet" media="print" >
+@media print {
+#resultados{
+	font-size: 12px; padding: 3px;
+}
+#conpras{font-size: 14px; padding: -3px;}
+#titulo{background-color: #90c777;}
+#Rproducto{padding: 2px; margin-bottom: 1em;}
+}
+</style>
 </div>

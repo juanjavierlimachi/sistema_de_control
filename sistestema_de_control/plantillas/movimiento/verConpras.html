@@ -50,12 +50,12 @@ $(document).ready(Sheart);
         error:errores
     });
 }
-$("#Tipo").on("submit",function(e){
+$("#Tipo").submit(function(e){
         e.preventDefault();
           $.ajax({
               type:"POST",
               url:"/buscarCompra/",
-              data:$("#compra_id").serialize(),
+              data:$(this).serialize(),
               success:resultado,
               error:errores
           });
@@ -84,12 +84,16 @@ function errores(){
           <form method='POST' id='Tipo' class="sidebar-form">
           	{% csrf_token %}
 			        <div class="input-group">
-			          <input type="text" name="compra" id="compra_id" class="form-control" placeholder="Ingrese el nro. de compra" required>
+			          <input type="text" name="compra" id="compra_id" class="form-control" placeholder="BUSCAR INGRESO" required>
 			              <span class="input-group-btn">
 			                <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
 			                </button>
 			              </span>
+			              
 			        </div>
+			        <p class="help-block">
+                    Buscar por código ó responsable
+                </p>
 			  </form>
 			  </div>
 	        </div>
@@ -97,7 +101,7 @@ function errores(){
 	    </div>
 
 <div class="table-responsive">
-	<h4 colspan="8" align="center">COMPRA DE PRODUCTOS REGISTRADOS EN EL SISTEMA</h4>
+	<h4 colspan="8" align="center"><strong>COMPRA DE PRODUCTOS REGISTRADOS EN EL SISTEMA</strong></h4>
 <table class="table table-hover table-striped table-bordered dt-responsive datatable" id="table-ingresos">
 <thead  class="success">
 		<th style="width: 3%;">Nro</th>

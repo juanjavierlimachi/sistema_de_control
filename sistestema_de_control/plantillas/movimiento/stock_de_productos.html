@@ -1,4 +1,5 @@
 <div class="table-responsive">
+	<h4 colspan="8" align="center"><strong>INVENTARIO DE PRODUCTOS REGISTRADOS</strong></h4>
 <table class="table table-hover table-striped table-bordered dt-responsive datatable" border=1>
 <thead>
 	<th style="width: 5%;">Nro</th>
@@ -40,8 +41,14 @@
 			<td>{{i.total}}</td>
 			<td align="center">{{i.id}}</td>
 		</tr>
+{% empty %}
+<tr>
+	<td colspan="8" align="center"><h4><strong>No hay registros para esta consulta.</strong></h4></td>
+</tr>
 {% endfor %}
-<tr> <td colspan="3"><strong>Totales: </strong></td><td></td>
-	<td><strong>{{t_ventas}}</strong></td><td><strong>{{t_compras}}</strong></td> </tr>
+<tr> <td colspan="4"><strong>Totales: </strong></td>
+	<td><strong>{{t_ventas}}</strong></td><td><strong>{{t_compras}}</strong></td>
+	<td><strong>{{stock}}</strong></td><td><strong>{{t}}</strong></td>
+</tr>
 </table>
 </div>

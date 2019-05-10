@@ -1,25 +1,26 @@
-<style type="text/css">
-
-</style>
+<meta charset="utf-8">
 <div class="table-responsive">
-<h4 colspan="8" align="center">INVENTARIO DE PRODUCTOS REGISTRADOS</h4>
+<h2 colspan="8" align="center"><strong>INVENTARIO DE PRODUCTOS REGISTRADOS 
+	{% if ids == "4" %} EN BAJA {% endif %} FECHA: {% now 'd /m /Y' %}</strong></h2>
 <table class="table table-hover table-striped table-bordered dt-responsive datatable" border="1" style="font-size: 12px;">
 <thead>
 	<th style="width: 5%;"><br>Nro</th>
 	<th><br>PRODUCTO</th>
-	<th><br>UNIDAD</th>
-	<th><br>VENTA</th>
+	<th style="width: 8%;"><br>CÓD</th>
+	<th style="width: 16%;"><br>UNIDAD</th>
+	<th style="width: 12%;"><br>VENTA</th>
 	{% if user.is_superuser %}
 	<th><br>COMPRA</th>
 	{% endif %}
 	<th><br>CATEGORIA</th>
-	<th style="width: 60px;" align="center"><br>STOCK</th>
-	<th style="width: 70px;"><br>ESTADO</th>
+	<th style="width: 12%;" align="center"><br>STOCK</th>
+	<th style="width: 12%;"><br>ESTADO</th>
 </thead>
 {% for i in datos %}
 		<tr>
 			<td align="center"><br>{{forloop.counter}}</td>
 			<td align="center"><br>{{i.Nombre_producto|upper}}</td>
+			<td align="center"><br>{{i.id}}</td>
 			<td align="center"><br>{{i.Unidad|upper}}</td>
 			<td align="center"><br>{{i.Precio_venta}}</td>
 			{% if user.is_superuser %}

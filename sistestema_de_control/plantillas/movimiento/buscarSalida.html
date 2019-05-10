@@ -1,0 +1,36 @@
+<div class="table-responsive">
+	<h4 colspan="6" align="center"><strong>SALIDA DE PRODUCTOS REGISTRADOS EN EL SISTEMA</strong></h4>
+<table class="table table-hover table-striped table-bordered dt-responsive datatable" id="table-ingresos">
+<thead  class="success">
+		<th style="width: 3%;">Nro</th>
+		<th style="width: 3%;">CÓDIGO</th>
+		<th>FECHA DE SALIDA</th>
+		<th>CONDUCTOR</th>
+		<th style="width: 3%;">MOVIL</th>
+		<th>KILOMETRAJE</th>
+		<th>REG. POR</th>
+		
+</thead >
+
+{% for i in datos %}
+		<tr>
+			<td>
+				<a href="#" onclick="Salida_detalle({{i.id}})" title="Ir a detalles">
+					{{forloop.counter}}         <i class="fa fa-plus"></i>
+				</a>
+			</td>
+			<td align="center">{{i.id}}</td>
+			<td>{{i.fecha_salida|date}}</td>
+			<td>{{i.Movil.Conductor.get_full_name|upper}}</td>
+			<td> {{i.Movil}}</td>
+			<td>{% if i.Kilometraje %}
+				{{i.Kilometraje}}
+				{% endif %}
+			</td>
+			<td>{{i.Usuario.get_full_name|upper}}</td>
+		</tr>
+	{% empty %}
+	<tr> <td colspan="6" align="center"><strong>No se encontró registros</strong></td> </tr>
+{% endfor %}
+</table>
+</div>

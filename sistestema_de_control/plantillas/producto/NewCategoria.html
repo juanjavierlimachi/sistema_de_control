@@ -9,7 +9,7 @@
             data: dato,
             success:function(resp){
                 $("#exampleModal .modal-title").text("");
-                $(".modal-body").html(resp);
+                $(".modal-body").html("<div class='alert alert-success' role='alert'>"+resp+"</div>");
                 verCategorias();
             }
         });

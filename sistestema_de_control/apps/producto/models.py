@@ -5,7 +5,7 @@ from django.db import models
 from django.contrib.auth.forms import User
 # Create your models here.
 class Categoria(models.Model):
-	Nombre_categoria=models.CharField(max_length=100, unique=True)
+	Nombre_categoria=models.CharField(max_length=100, unique=True,help_text="Describa la Categoria")
 	fecha_registro = models.DateTimeField(auto_now_add=True)
 	estado=models.BooleanField(default=True)
 	def __unicode__(self):

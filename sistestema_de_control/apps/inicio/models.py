@@ -13,9 +13,9 @@ class Perfiles(models.Model):
 	def __unicode__(self):
 		return self.usuario.username
 
-class Empleado(models.Model):
-	Usuario = models.OneToOneField(User, unique=True, related_name='Empleado')
-	ci = models.IntegerField()
-	telefono = models.IntegerField()
-	def __unicode__(self):
-		return self.usuario.username
+# class Empleado(models.Model):
+# 	Usuario = models.OneToOneField(User, unique=True, related_name='Empleado')
+# 	ci = models.IntegerField()
+# 	telefono = models.IntegerField()
+# 	def __unicode__(self):
+# 		return self.usuario.username

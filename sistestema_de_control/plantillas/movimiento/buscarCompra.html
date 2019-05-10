@@ -14,7 +14,7 @@
 		<tr>
 			<td>
 				<a href="#" onclick="NewOrden_detalle({{i.id}})" title="Ir a detalles">
-					<i class="fa fa-plus"></i>
+					{{forloop.counter}}  <i class="fa fa-plus"></i>
 				</a></td>
 			<td>{{i.Nro_de_Compra}}</td>
 			<td>{{i.Responsable|upper}}</td>

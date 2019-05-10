@@ -1,0 +1,76 @@
+<div class="table-responsive">
+	<h2 align="center" colspan="4"><strong>REPORTE GENERAL DE INGRESOS</strong></h2>
+<table class="table table-hover table-striped table-bordered dt-responsive datatable" id="table-ingresos">
+<thead class="success">
+<tr>
+	
+	<th style="width: 2%;">COD</th>
+	<th>PRODUCTO</th>
+	<th align="center" style="width: 12%;">T. INGRESOS</th>
+	
+	<th>PRECIO	</th>
+	<th>CANTIDAD</th>
+	<th>GASTOS</th>
+</tr>
+</thead>
+{% for i in ingresos %}
+			{% for p in produc %}
+				{% if i.producto == p.id  %}
+				<tr>
+
+					<td style="width: 2%;">{{p.id}}</td>
+					<td>{{p.Nombre_producto|upper}}</td>
+					<td align="center" style="width: 12%;">{{i.Cantidad_ing}}</td>
+					<td>{{p.Precio_compra}}</td>
+					<td>{{i.Total}} {{p.Unidad}}s</td>
+					<td>{{i.pago}} Bs.</td>
+				</tr>
+				{% endif %}
+			{% endfor %}
+{% endfor %}
+<tr> 
+	<td colspan="2">Totales: <strong>{{t_ingresos}} </strong></td>
+	<td></td>
+	<td></td>
+	<td><strong>{{cant}} Unidades</strong></td>
+	<td><strong>{{gastos}} Bs.</strong></td>
+</tr>
+</table>
+
+	<h2 align="center" colspan="4"><strong>REPORTE GENERAL DE SALIDAS</strong></h2>
+<table class="table table-hover table-striped table-bordered dt-responsive datatable" id="table-ingresos">
+<thead class="success">
+<tr>
+	<th style="width: 2%;">COD</th>
+	<th>PRODUCTO</th>
+	<th align="center" style="width: 12%;">T. SALIDAS</th>
+	<th>PRECIO	</th>
+	<th>CANTIDAD</th>
+	<th>INGRESOS</th>
+</tr>
+</thead>
+{% for i in salidas %}
+			{% for p in produc %}
+				{% if i.producto == p.id  %}
+				<tr>
+					<td style="width: 2%;">{{p.id}}</td>
+					<td>{{p.Nombre_producto|upper}}</td>
+					
+					<td align="center" style="width: 12%;">{{i.Cantidad_sali}}</td>
+					<td>{{p.Precio_compra}}</td>
+
+					<td>{{i.Total}} {{p.Unidad}}s</td>
+					<td>{{i.pago}} Bs.</td>
+				</tr>
+				{% endif %}
+			{% endfor %}
+{% endfor %}
+<tr> 
+	<td colspan="2">Totales: <strong>{{t_ingresos}} </strong></td>
+	<td></td>
+	<td></td>
+	<td><strong>{{cant}} Unidades</strong></td>
+	<td><strong>{{gastos}} Bs.</strong></td>
+</tr>
+</table>
+</div>

@@ -42,7 +42,7 @@ class Vehiculo(models.Model):
 	Placa = models.CharField(unique=True, max_length=10)
 	Movil = models.PositiveIntegerField(unique=True)
 	Kilometraja = models.IntegerField(blank=True, null=True, help_text="Opcional")
-	Conductor=models.ForeignKey(User)
+	Conductor=models.OneToOneField(User,unique=True)
 	fecha_registro=models.DateTimeField(auto_now_add=True)
 	estado=models.BooleanField(default=True)
 	def __unicode__(self):
