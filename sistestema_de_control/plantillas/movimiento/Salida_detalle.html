@@ -105,7 +105,7 @@ function EliminarSalida(ids){
 			<td>{{forloop.counter}}</td>
 			<td>{{i.producto.Nombre_producto|upper}}</td>
 			<td>{{i.producto.id}}</td>
-			<td>{{i.cantidad}}</td>
+			<td>{{i.cantidad}} {{i.producto.Unidad}}s</td>
 			<td>{{i.Precio_venta}}</td>
 			<td>{{i.total}}</td>
 			<td>{{i.fecha_registro|date:"d-m-Y"}}</td>

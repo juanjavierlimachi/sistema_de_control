@@ -77,7 +77,7 @@ function EliminarCompra(ids){
 		<td colspan="4">FECHA DE COMPRA: <strong>{{dato.fecha_registro|date}}</strong></td>
 	</tr>
 	<tr>
-		<td colspan="4">CORTESIA:  <strong>{{dato.Cortesia}}</strong></td>
+		<td colspan="4">CORTESIA:  <strong>{% if dato.Cortesia %} {{dato.Cortesia}} {% else %} sin cortesia {% endif %}</strong></td>
 	</tr>
 </table>
 </div>
@@ -89,7 +89,7 @@ function EliminarCompra(ids){
 	<th style="width: 2%;"></th>
 	<th>PRODUCTO</th>
 	<th>COD</th>
-	<th style="width: 6%;">CANTIDAD</th>
+	<th style="width: 10%;">CANTIDAD</th>
 	<th>PREC. UNI.</th>
 	<th>TOTAL</th>
 	<th>FECHA VENC.</th>
@@ -102,7 +102,7 @@ function EliminarCompra(ids){
 			<td>{{forloop.counter}}</td>
 			<td>{{i.producto.Nombre_producto|upper}}</td>
 			<td>{{i.producto.id}}</td>
-			<td>{{i.cantidad}}</td>
+			<td>{{i.cantidad}} {{i.producto.Unidad}}s</td>
 			<td>{{i.Precio_unidad}}</td>
 			<td>{{i.total}}</td>
 			<td>{{i.fecha_de_vencimiento}}</td>

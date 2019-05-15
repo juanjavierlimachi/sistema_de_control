@@ -29,7 +29,7 @@
 		{% for j in i.salidas.all %}
 		<tr>
 			<td colspan="2">{{j.producto|upper}}</td>
-			<td>{{j.cantidad}}</td>
+			<td>{{j.cantidad}} {{j.producto.Unidad}}s</td>
 			<td>{{j.total}}</td>
 		</tr>
 		{% endfor %}
