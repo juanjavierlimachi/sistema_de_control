@@ -1,0 +1,91 @@
+<div class="table-responsive">
+	
+	<h2 align="center" colspan="4">{% if usuario %} PERTENECIENTE A: {{usuario.get_full_name|upper}}{% endif%} DESDE: {{inicio|date:"d M Y"}} HASTA: {{final|date:"d M Y"}}<br><strong>REPORTE GENERAL DE INGRESOS</strong></h2>
+<table border="1" id="conpras" class="table table-hover table-striped table-bordered dt-responsive datatable" id="table-ingresos">
+<thead class="success">
+<tr>
+	
+	<th style="width: 15%;"><br>COD PROD</th>
+	<th><br>PRODUCTO</th>
+	<th align="center" style="width: 10%;"><br>T. INGRESOS</th>
+	
+	<th><br>PRECIO	</th>
+	<th><br>CANTIDAD</th>
+	<th><br>GASTOS</th>
+</tr>
+</thead>
+{% for i in ingresos %}
+			{% for p in produc %}
+				{% if i.producto == p.id  %}
+				<tr>
+
+					<td style="width: 15%;"><br>{{p.id}}</td>
+					<td><br>{{p.Nombre_producto|upper}}</td>
+					<td align="center" style="width: 10%;"><br>{{i.Cantidad_ing}}</td>
+					<td><br>{{p.Precio_compra}}</td>
+					<td><br>{{i.Total}} {{p.Unidad}}s</td>
+					<td><br>{{i.pago}} Bs.</td>
+				</tr>
+				{% endif %}
+			{% endfor %}
+{% empty %}
+<tr><td colspan="6" align="center"><br><strong><h4>No hay registros</h4></strong></td></tr>
+{% endfor %}
+<tr> 
+	<td colspan="2"><br>Totales: <strong>{{t_ingresos}} </strong></td>
+	<td></td>
+	<td></td>
+	<td><br><strong>{{cant}} Unidades</strong></td>
+	<td><br><strong>{{gastos}} Bs.</strong></td>
+</tr>
+</table>
+
+	<h2 align="center" colspan="4"><br><strong>REPORTE GENERAL DE SALIDAS</strong></h2>
+<table border="1" id="conpras" class="table table-hover table-striped table-bordered dt-responsive datatable" id="table-ingresos">
+<thead class="success">
+<tr>
+	<th style="width: 15%;"><br>COD PROD</th>
+	<th><br>PRODUCTO</th>
+	<th align="center" style="width: 10%;"><br>T. SALIDAS</th>
+	<th><br>PRECIO	</th>
+	<th><br>CANTIDAD</th>
+	<th><br>INGRESOS</th>
+</tr>
+</thead>
+{% for i in salidas %}
+			{% for p in produc %}
+				{% if i.producto == p.id  %}
+				<tr>
+					<td style="width: 15%;"><br>{{p.id}}</td>
+					<td><br>{{p.Nombre_producto|upper}}</td>
+					
+					<td align="center" style="width: 10%;"><br>{{i.Cantidad_sali}}</td>
+					<td><br>{{p.Precio_compra}}</td>
+
+					<td><br>{{i.Total}} {{p.Unidad}}s</td>
+					<td><br>{{i.pago}} Bs.</td>
+				</tr>
+				{% endif %}
+			{% endfor %}
+{% empty %}
+<tr><td colspan="6" align="center"><br><strong><h4>No hay registros</h4></strong></td></tr>
+{% endfor %}
+<tr> 
+	<td colspan="2"><br>Totales: <strong>{{t_ingresos}} </strong></td>
+	<td></td>
+	<td></td>
+	<td><br><strong>{{cant}} Unidades</strong></td>
+	<td><br><strong>{{gastos}} Bs.</strong></td>
+</tr>
+</table>
+</div>
+<style type="text/css" rel="stylesheet" media="print" >
+@media print {
+#resultados{
+	font-size: 12px; padding: 3px;
+}
+#conpras{font-size: 14px; padding: -3px; text-align: center;}
+#titulo{background-color: #90c777;}
+#Rproducto{padding: 2px; margin-bottom: 1em;}
+}
+</style>

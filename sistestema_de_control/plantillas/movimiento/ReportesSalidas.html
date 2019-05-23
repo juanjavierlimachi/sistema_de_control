@@ -2,14 +2,13 @@
 <div class="table-responsive">
 <table >
 	<tr>
-		
-		<td colspan="4" align="center"><h1>PLANILLA DE COMPRAS
-			 {% if usuario %}
-			 	<strong>DE: {{usuario.get_full_name|upper}}</strong>
-			 {% endif %}
+		<td colspan="4" align="center"><h1>PLANILLA DE SALIDAS
 			{% if proveedor %}
-				<strong><br>A {{proveedor.Nombre_Razon_Social|upper}}</strong> 
+				<strong>DEL MOVIL NRO. {{proveedor.Movil}}</strong> 
 			{% endif %}
+			 {% if usuario %}
+			 	<strong><br>DE: {{usuario.get_full_name|upper}}</strong>
+			 {% endif %}
 			DESDE <strong>{{inicio|date:"d M Y"}} </strong> 
 			<strong>HASTA {{final|date:"d M Y"}}</strong></h1>
 		</td>
@@ -18,25 +17,28 @@
 <table class="table table-hover table-striped" border="1" id="conpras">
 {% for i in datos %}
 		<tr class="success" background-color="red">
-			<td colspan="2" align="center" id="titulo"><br>NRO. DE COMPRA: <strong>{{i.Nro_de_Compra}}</strong></td>
-			<td colspan="2" align="center" id="titulo"><br>FECHA DE COMPRA. <strong>{{i.fecha_registro|date:"l d M Y"}}</strong></td>
+			<td colspan="2" align="center" id="titulo"><br>CÓDIGO DE SALIDA: <strong>{{i.id}}</strong>
+			MOVIL: <strong>{{i.Movil}}</strong></td>
+			<td colspan="2" align="center" id="titulo"><br>FECHA DE SALIDA. <strong>{{i.fecha_salida|date:"l d M Y"}}</strong></td>
 		</tr>
 		<tr>
 			<td align="center" colspan="2"><br><strong>Productos</strong></td>
 			<td align="center"><br><strong>Cantidad</strong></td>
 			<td align="center"><br><strong>Total</strong></td>
 		</tr>
-		{% for j in i.ingreso.all %}
+		{% for j in i.salidas.all %}
 		<tr>
 			<td align="center" colspan="2"><br>{{j.producto|upper}}</td>
 			<td align="center"><br>{{j.cantidad}} {{j.producto.Unidad}}s</td>
 			<td align="center" ><br>{{j.total}}</td>
 		</tr>
+		{% empty %}
+			<tr><td colspan="4" align="center"><br>No hay registros</td></tr>
 		{% endfor %}
 		<tr>
 			<td colspan="2" align="center"><br><strong>Totales</strong></td>
-			<td align="center"><br><strong>{{i.Total_paquetes}}</strong></td>
-			<td align="center"><br><strong>{{i.Total_sin_descuento}}</strong></td>
+			<td align="center"><br><strong>{{i.Total}}</strong></td>
+			<td align="center"><br><strong>{{i.Total_a_pagar}}</strong></td>
 		</tr>
 	{% empty %}
 	<tr> <td colspan="4" align="center"><strong>No se encontró registros</strong></td> </tr>
@@ -68,10 +70,11 @@
 		<TD>
 		<table width="300px" float="left" border=1 id="resultados">
 			<tr class="success"><td align="center"><strong>RESUMEN DE COSTOS</strong></td></tr>
-			<tr> <td><strong>TOTAL COMPRAS: </strong> {{totalR}}</td> </tr>
-			<tr><td><strong>TOTAL PAQUETES COMPRADOS: </strong> {{t_paquetes}} </td></tr>
-			<tr><td><strong>MONTO SIN DESCUENTO: </strong> {{t_sin_descuento}} </td></tr>
-			<tr><td><strong>DESCUENTO DEL 18%: </strong> {{descuento}} </td></tr>
+			<tr> <td><strong>TOTAL SALIDAS: </strong> {{totalR}}</td> </tr>
+			<tr><td><strong>TOTAL: </strong> {{t_paquetes}} </td></tr>
+			<tr><td><strong>META: </strong> {{t_sin_descuento}} </td></tr>
+			<tr><td><strong>%AVANCE: </strong> {{descuento}} </td></tr>
+			<tr><td><strong>PORCENTAJE: </strong> {{total}} </td></tr>
 			<tr><td><strong>TOTAL A CANCELAR: </strong> {{total}} </td></tr>
 			<tr><td><strong>Reporte Generado Por:</strong> {{user.get_full_name|upper}} </td></tr>
 		</table>

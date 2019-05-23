@@ -38,6 +38,7 @@ def verProducto(request):
 	datos = Producto.objects.filter(estado=True).order_by('-id')
 	t_compras = 0
 	t_ventas = 0
+	ganancia = 0
 	t = 0
 	stock = 0
 	for i in datos:
@@ -46,8 +47,8 @@ def verProducto(request):
 		#t_compras = i.Precio_compra + t_compras
 		t = i.total + t
 		stock = i.Stock + stock
-		
-	return render(request,'producto/verProducto.html',{'datos':datos,'t_ventas':t_ventas,'t_compras':t_compras,'t':t,'stock':stock})
+	ganancia = t_ventas	- t_compras
+	return render(request,'producto/verProducto.html',{'datos':datos,'t_ventas':t_ventas,'t_compras':t_compras,'t':t,'stock':stock,'ganancia':ganancia})
 def verCategorias(request):
 	datos = Categoria.objects.all().order_by('-id')
 	total = Categoria.objects.all().count()

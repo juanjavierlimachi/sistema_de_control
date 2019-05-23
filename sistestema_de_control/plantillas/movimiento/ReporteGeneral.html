@@ -27,6 +27,8 @@
 				</tr>
 				{% endif %}
 			{% endfor %}
+{% empty %}
+<tr><td colspan="6" align="center"><strong><h4>No hay registros</h4></strong></td></tr>
 {% endfor %}
 <tr> 
 	<td colspan="2">Totales: <strong>{{t_ingresos}} </strong></td>
@@ -64,6 +66,8 @@
 				</tr>
 				{% endif %}
 			{% endfor %}
+{% empty %}
+<tr><td colspan="6" align="center"><strong><h4>No hay registros</h4></strong></td></tr>
 {% endfor %}
 <tr> 
 	<td colspan="2">Totales: <strong>{{t_ingresos}} </strong></td>

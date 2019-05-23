@@ -3,11 +3,14 @@
 <table class="table table-hover table-striped" id="table-ingresos">
 	<tr>
 		<td colspan="4" align="center">PLANILLA DE COMPRAS
+			 {% if usuario %}
+			 	<strong>DE: {{usuario.get_full_name|upper}}</strong>
+			 {% endif %}
 			{% if proveedor %}
-				<strong>A {{proveedor.Nombre_Razon_Social|upper}}</strong> 
+				<strong><br>A {{proveedor.Nombre_Razon_Social|upper}}</strong> 
 			{% endif %}
-			DESDE <strong>{{inicio|date:"d/m/Y"}} </strong> 
-			<strong>HASTA {{final|date:"d/m/Y"}}</strong>
+			DESDE <strong>{{inicio|date:"d M Y"}} </strong> 
+			<strong>HASTA {{final|date:"d M Y"}}</strong>
 		</td>
 	</tr>
 {% for i in datos %}
@@ -18,7 +21,7 @@
 				</a>
 			</td>
 			<td>NRO. DE COMPRA: <strong>{{i.Nro_de_Compra}}</strong></td>
-			<td>FECHA DE LA COMPRA. <strong>{{i.fecha_registro|date}}</strong></td>
+			<td>FECHA DE COMPRA. <strong>{{i.fecha_registro|date:"l d M Y"}}</strong></td>
 			<td>REG. POR: <strong>{{i.Usuario.get_full_name|upper}}</strong></td>
 		</tr>
 		<tr>
@@ -32,6 +35,8 @@
 			<td>{{j.cantidad}} {{j.producto.Unidad}}s</td>
 			<td>{{j.total}}</td>
 		</tr>
+		{% empty %}
+			<tr><td colspan="3" align="center">No hay registros</td></tr>
 		{% endfor %}
 		<tr>
 			<td><strong>Totales</strong></td><td></td>

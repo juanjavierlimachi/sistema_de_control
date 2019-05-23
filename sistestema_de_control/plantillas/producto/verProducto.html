@@ -13,7 +13,7 @@
     	<option value="1">Menores ó iguales a 10</option>
     	<option value="2">Mayores a 10 y menores ó iguales a 50</option>
     	<option value="3">Mayores a 50 productos</option>
-    	<option value="4">Optener los productos en Baja</option>
+    	<option value="4" style="color:red">Optener los productos en Baja</option>
     </select>
     <button class="btn btn-warning" type="button" href="#" onclick="ImprimirProducto()"><span class="fa fa-print">
   			Imprimir información
@@ -73,12 +73,18 @@
 	<td><h4 colspan="8" align="center"><strong>No hay registros para esta consulta.</strong></h4></td>
 </tr>
 {% endfor %}
-<tr> <td colspan="4"><strong>Totales: </strong></td>
-	<td><strong title="Total Ganancia">{{t_ventas}}</strong></td>
-	<td><strong title="Total Inverción">{{t_compras}}</strong></td>
-	<td><strong>{{stock}}</strong></td><td><strong>{{t}}</strong></td>
-
+{% if user.is_superuser %}
+<tr>
+	<td colspan="6">
+		<strong>Capital Bs. : <strong>{{t_ventas}}</strong></strong>
+		<strong>Inverción Bs. : </strong><strong>{{t_compras}}</strong>
+		<strong>Ganancia Bs. :</strong><strong>{{ganancia}}</strong>	
+	</td>
+	<td align="center"><strong>{{stock}}</strong></td>
+	<td><strong>{{t}}</strong></td>
+	<td></td>
 </tr>
+{% endif %}
 </table>
 </div>
 <script type="text/javascript">

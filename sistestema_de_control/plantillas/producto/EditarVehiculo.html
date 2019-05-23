@@ -11,6 +11,8 @@
                 $("#exampleModal .modal-title").text("");
                 $(".modal-body").html("<div class='alert alert-success' role='alert'>"+resp+"</div>");
                 verVehiculos();
+                setTimeout(function(){
+                    $(".modal .close").click(); },3000);
             }
         });
     });

@@ -15,7 +15,7 @@
                         url:'/Salida_detalle/'+resp+'/',
                         success:function(respp){
                             $(".x_content").html(respp);
-                            $(".modal .close").click() 
+                            $(".modal .close").click();
                         }
                     });
                 }
@@ -32,8 +32,9 @@
     {% csrf_token %}
         {{forms|bootstrap_horizontal}}
     <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
         <button type="submit" class="btn btn-primary">Registrar</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="reset" class="btn btn-warning">Borrar</button>
     </div>
   </form>
 </div>

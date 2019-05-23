@@ -11,6 +11,7 @@
                 $("#exampleModal .modal-title").text("");
                 $(".modal-body").html("<div class='alert alert-success' role='alert'>"+resp+"</div>");
                 verProducto();
+                
             }
         });
     });
@@ -20,8 +21,9 @@
     {% csrf_token %}
         {{forms|bootstrap_horizontal}}
     <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
         <button type="submit" class="btn btn-primary">Registrar</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="reset" class="btn btn-warning">Borrar</button>
     </div>
   </form>
 </div>

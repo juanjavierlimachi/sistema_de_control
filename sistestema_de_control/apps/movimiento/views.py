@@ -130,12 +130,14 @@ def stock_de_productos(request,id):
 	t_ventas = 0
 	t = 0
 	stock = 0
+	ganancia = 0
 	for i in datos:
 		t_ventas = (i.Stock * i.Precio_venta) + t_ventas
 		t_compras = (i.Stock * i.Precio_compra) + t_compras
 		t = i.total + t
 		stock = i.Stock + stock
-	return render(request,'movimiento/stock_de_productos.html',{'datos':datos,'t_ventas':t_ventas,'t_compras':t_compras,'t':t,'stock':stock})
+	ganancia = t_ventas	- t_compras
+	return render(request,'movimiento/stock_de_productos.html',{'datos':datos,'t_ventas':t_ventas,'t_compras':t_compras,'t':t,'stock':stock,'ganancia':ganancia})
 
 def ImprimiarStock(request, id):
 	if int(id) == 1:
@@ -153,8 +155,18 @@ def ImprimiarStock(request, id):
 					if int(id) == 4:
 						datos = Producto.objects.filter(estado=False).order_by('-id')
 	total = datos.count()
-
-	html=render_to_string('movimiento/ImprimiarStock.html',{'pagesize':'A4','datos':datos,'total':total,'ids':id})
+	t_compras = 0
+	t_ventas = 0
+	t = 0
+	stock = 0
+	ganancia = 0
+	for i in datos:
+		t_ventas = (i.Stock * i.Precio_venta) + t_ventas
+		t_compras = (i.Stock * i.Precio_compra) + t_compras
+		t = i.total + t
+		stock = i.Stock + stock
+	ganancia = t_ventas	- t_compras
+	html=render_to_string('movimiento/ImprimiarStock.html',{'pagesize':'A4','t_ventas':t_ventas,'t_compras':t_compras,'t':t,'stock':stock,'ganancia':ganancia,'datos':datos,'total':total,'ids':id})
 	return generar_pdf(html)
 
 def generar_pdf(html):
@@ -239,12 +251,13 @@ def consuta_por_fecha_ingresos(request):
 					productos_agrupados = IngresoProducto.objects.filter(Usuario_id=int(request.POST['usuario']),fecha_registro__range=(inicio,final)).values('producto').annotate(Total=Sum('cantidad'),pago=Sum('total'))
 					produc = Producto.objects.filter(estado=True)
 
-
+					usuario=''
 					for i in productos:
 						t_paquetes = t_paquetes + i.Total_paquetes
 						t_sin_descuento = t_sin_descuento + i.Total_sin_descuento
 						descuento = descuento + i.descuento
 						total = total + i.toto_pago
+						usuario = i.Usuario
 
 					dat={
 						'datos':productos,
@@ -253,6 +266,7 @@ def consuta_por_fecha_ingresos(request):
 						't_sin_descuento':t_sin_descuento,
 						'descuento':descuento,
 						'total':total,
+						'usuario':usuario,
 						'inicio':inicio.date(),
 						'final':final.date() - timedelta(days=1),
 						'productos_agrupados':productos_agrupados,
@@ -267,11 +281,15 @@ def consuta_por_fecha_ingresos(request):
 						
 						productos_agrupados = IngresoProducto.objects.filter(proveedor_id=int(request.POST['user']),Usuario_id=int(request.POST['usuario']),fecha_registro__range=(inicio,final)).values('producto').annotate(Total=Sum('cantidad'),pago=Sum('total'))
 						produc = Producto.objects.filter(estado=True)
+						proveedor =''
+						usuario=''
 						for i in productos:
 							t_paquetes = t_paquetes + i.Total_paquetes
 							t_sin_descuento = t_sin_descuento + i.Total_sin_descuento
 							descuento = descuento + i.descuento
 							total = total + i.toto_pago
+							proveedor = i.proveedor
+							usuario = i.Usuario
 
 						dat={
 							'datos':productos,
@@ -280,6 +298,8 @@ def consuta_por_fecha_ingresos(request):
 							't_sin_descuento':t_sin_descuento,
 							'descuento':descuento,
 							'total':total,
+							'proveedor':proveedor,
+							'usuario':usuario,
 							'inicio':inicio.date(),
 							'final':final.date() - timedelta(days=1),
 							'productos_agrupados':productos_agrupados,
@@ -300,9 +320,8 @@ def consuta_por_fecha_salidas(request):
 		final = final + timedelta(days=1)
 		#user  Vehiculos
 		if int(request.POST['usuario']) == 0 and int(request.POST['user']) == 0:
-			#SI ELEJE TODOS LOS USURIO Y TODOS LOS PROVEEDORES
+			#SI ELEJE TODOS LOS USURIO Y TODOS LOS MOVILES
 			productos=Salida.objects.filter(fecha_salida__range=(inicio,final),estado=True)
-
 			productos_agrupados = SalidaProducto.objects.filter(fecha_registro__range=(inicio,final)).values('producto').annotate(Total=Sum('cantidad'),pago=Sum('total'))
 			produc = Producto.objects.filter(estado=True)
 			# for i in productos:
@@ -326,21 +345,20 @@ def consuta_por_fecha_salidas(request):
 			}
 			return render(request,'movimiento/consuta_por_fecha_salidas.html',dat)
 		else:
-			#SI ELEJI TODOS LOS USUARIOS PERO ESCOJE UN PROVEEDOR
+			#SI ELEJI TODOS LOS USUARIOS PERO ESCOJE UN MOVIL
 			if int(request.POST['usuario']) == 0 and int(request.POST['user']) != 0:
+				print "mOVILLLLLLL",request.POST['user']
 				productos=Salida.objects.filter(Movil_id=int(request.POST['user']),fecha_salida__range=(inicio,final),estado=True)
-				
-				productos_agrupados = SalidaProducto.objects.filter(Movil_id=int(request.POST['user']),fecha_salida__range=(inicio,final)).values('producto').annotate(Total=Sum('cantidad'),pago=Sum('Total_a_pagar'))
+				productos_agrupados = SalidaProducto.objects.filter(Movil_id=int(request.POST['user']),fecha_registro__range=(inicio,final)).values('producto').annotate(Total=Sum('cantidad'),pago=Sum('total'))
 				produc = Producto.objects.filter(estado=True)
-
 				proveedor =''
 				for i in productos:
-					# t_paquetes = t_paquetes + i.Total_paquetes
-					# t_sin_descuento = t_sin_descuento + i.Total_sin_descuento
-					# descuento = descuento + i.descuento
-					# total = total + i.toto_pago
+				# 	# t_paquetes = t_paquetes + i.Total_paquetes
+				# 	# t_sin_descuento = t_sin_descuento + i.Total_sin_descuento
+				# 	# descuento = descuento + i.descuento
+				# 	# total = total + i.toto_pago
 					proveedor = i.Movil
-
+					print "ppppppppp",proveedor
 				dat={
 					'datos':productos,
 					'totalR':productos.count(),
@@ -360,16 +378,15 @@ def consuta_por_fecha_salidas(request):
 				#SI ELIJE UN USUARIO Y TODOS LOS PROVEEDORES 
 				if int(request.POST['user']) == 0 and int(request.POST['usuario']) != 0:
 					productos=Salida.objects.filter(Usuario_id=int(request.POST['usuario']),fecha_salida__range=(inicio,final),estado=True)
-					productos_agrupados = SalidaProducto.objects.filter(Usuario_id=int(request.POST['usuario']),fecha_salida__range=(inicio,final)).values('producto').annotate(Total=Sum('cantidad'),pago=Sum('Total_a_pagar'))
+					productos_agrupados = SalidaProducto.objects.filter(Usuario_id=int(request.POST['usuario']),fecha_registro__range=(inicio,final)).values('producto').annotate(Total=Sum('cantidad'),pago=Sum('total'))
 					produc = Producto.objects.filter(estado=True)
-
-
-					# for i in productos:
+					usuario =''
+					for i in productos:
 					# 	t_paquetes = t_paquetes + i.Total_paquetes
 					# 	t_sin_descuento = t_sin_descuento + i.Total_sin_descuento
 					# 	descuento = descuento + i.descuento
 					# 	total = total + i.toto_pago
-
+						usuario = i.Usuario
 					dat={
 						'datos':productos,
 						'totalR':productos.count(),
@@ -377,6 +394,7 @@ def consuta_por_fecha_salidas(request):
 						't_sin_descuento':t_sin_descuento,
 						'descuento':descuento,
 						'total':total,
+						'usuario':usuario,
 						'inicio':inicio.date(),
 						'final':final.date() - timedelta(days=1),
 						'productos_agrupados':productos_agrupados,
@@ -387,11 +405,14 @@ def consuta_por_fecha_salidas(request):
 				else:
 					#SI ELEJE UN PROVEEDOR Y UN USUARIO
 					if int(request.POST['user']) != 0 and int(request.POST['usuario']) != 0:
-						productos=Orden.objects.filter(Movil_id=int(request.POST['user']),Usuario_id=int(request.POST['usuario']),fecha_salida__range=(inicio,final),estado=True)
-						
-						productos_agrupados = IngresoProducto.objects.filter(Movil_id=int(request.POST['user']),Usuario_id=int(request.POST['usuario']),fecha_salida__range=(inicio,final)).values('producto').annotate(Total=Sum('cantidad'),pago=Sum('Total_a_pagar'))
+						productos=Salida.objects.filter(Movil_id=int(request.POST['user']),Usuario_id=int(request.POST['usuario']),fecha_salida__range=(inicio,final),estado=True)
+						productos_agrupados = SalidaProducto.objects.filter(Movil_id=int(request.POST['user']),Usuario_id=int(request.POST['usuario']),fecha_registro__range=(inicio,final)).values('producto').annotate(Total=Sum('cantidad'),pago=Sum('total'))
 						produc = Producto.objects.filter(estado=True)
-						# for i in productos:
+						proveedor = ''
+						usuario = ''
+						for i in productos:
+							proveedor = i.Movil
+							usuario = i.Usuario
 						# 	t_paquetes = t_paquetes + i.Total_paquetes
 						# 	t_sin_descuento = t_sin_descuento + i.Total_sin_descuento
 						# 	descuento = descuento + i.descuento
@@ -399,6 +420,8 @@ def consuta_por_fecha_salidas(request):
 
 						dat={
 							'datos':productos,
+							'proveedor':proveedor,
+							'usuario':usuario,
 							'totalR':productos.count(),
 							't_paquetes':t_paquetes,
 							't_sin_descuento':t_sin_descuento,
@@ -419,7 +442,6 @@ def ReportesIngresos(request, id_user,id_pro,inicio,final):
 		t_sin_descuento = 0
 		descuento = 0
 		total = 0
-		
 		inicio=datetime.strptime(inicio,"%d-%m-%Y")
 		final=datetime.strptime(final,"%d-%m-%Y")
 		final = final + timedelta(days=1)
@@ -553,10 +575,135 @@ def ReportesIngresos(request, id_user,id_pro,inicio,final):
 						return HttpResponse("Error")
 
 def ReportesSalidas(request, id_user,id_movil,inicio,final):
-	
-	return HttpResponse("EN PROCESO DE CREACIÓN")
+	if request.method == "GET":
+		t_paquetes = 0
+		t_sin_descuento = 0
+		descuento = 0
+		total = 0
+		inicio=datetime.strptime(inicio,"%d-%m-%Y")
+		final=datetime.strptime(final,"%d-%m-%Y")
+		final = final + timedelta(days=1)
+		#user  Vehiculos
+		if int(id_user) == 0 and int(id_movil) == 0:
+			#SI ELEJE TODOS LOS USURIO Y TODOS LOS MOVILES
+			productos=Salida.objects.filter(fecha_salida__range=(inicio,final),estado=True)
+			productos_agrupados = SalidaProducto.objects.filter(fecha_registro__range=(inicio,final)).values('producto').annotate(Total=Sum('cantidad'),pago=Sum('total'))
+			produc = Producto.objects.filter(estado=True)
+			# for i in productos:
+			# 	t_paquetes = t_paquetes + i.Total_paquetes
+			# 	t_sin_descuento = t_sin_descuento + i.Total_sin_descuento
+			# 	descuento = descuento + i.descuento
+			# 	total = total + i.toto_pago
 
-			
+			dat={
+				'datos':productos,
+				'totalR':productos.count(),
+				't_paquetes':t_paquetes,
+				't_sin_descuento':t_sin_descuento,
+				'descuento':descuento,
+				'total':total,
+				'inicio':inicio.date(),
+				'final':final.date() - timedelta(days=1),
+				'productos_agrupados':productos_agrupados,
+				'totalPro':productos_agrupados.count(),
+				'produc':produc
+			}
+			html = render_to_string('movimiento/ReportesSalidas.html',dat)
+			return generar_pdf(html)
+		else:
+			#SI ELEJI TODOS LOS USUARIOS PERO ESCOJE UN MOVIL
+			if int(id_user) == 0 and int(id_movil) != 0:
+				productos=Salida.objects.filter(Movil_id=int(id_movil),fecha_salida__range=(inicio,final),estado=True)
+				productos_agrupados = SalidaProducto.objects.filter(Movil_id=int(id_movil),fecha_registro__range=(inicio,final)).values('producto').annotate(Total=Sum('cantidad'),pago=Sum('total'))
+				produc = Producto.objects.filter(estado=True)
+				proveedor =''
+				for i in productos:
+				# 	# t_paquetes = t_paquetes + i.Total_paquetes
+				# 	# t_sin_descuento = t_sin_descuento + i.Total_sin_descuento
+				# 	# descuento = descuento + i.descuento
+				# 	# total = total + i.toto_pago
+					proveedor = i.Movil
+					print "ppppppppp",proveedor
+				dat={
+					'datos':productos,
+					'totalR':productos.count(),
+					't_paquetes':t_paquetes,
+					't_sin_descuento':t_sin_descuento,
+					'descuento':descuento,
+					'total':total,
+					'inicio':inicio.date(),
+					'final':final.date() - timedelta(days=1),
+					'proveedor':proveedor,
+					'productos_agrupados':productos_agrupados,
+					'totalPro':productos_agrupados.count(),
+					'produc':produc
+				}
+				html = render_to_string('movimiento/ReportesSalidas.html',dat)
+				return generar_pdf(html)
+			else:
+				#SI ELIJE UN USUARIO Y TODOS LOS moviles 
+				if int(id_user) != 0 and int(id_movil) == 0:
+					productos=Salida.objects.filter(Usuario_id=int(id_user),fecha_salida__range=(inicio,final),estado=True)
+					productos_agrupados = SalidaProducto.objects.filter(Usuario_id=int(id_user),fecha_registro__range=(inicio,final)).values('producto').annotate(Total=Sum('cantidad'),pago=Sum('total'))
+					produc = Producto.objects.filter(estado=True)
+					usuario =''
+					for i in productos:
+					# 	t_paquetes = t_paquetes + i.Total_paquetes
+					# 	t_sin_descuento = t_sin_descuento + i.Total_sin_descuento
+					# 	descuento = descuento + i.descuento
+					# 	total = total + i.toto_pago
+						usuario = i.Usuario
+					dat={
+						'datos':productos,
+						'totalR':productos.count(),
+						't_paquetes':t_paquetes,
+						't_sin_descuento':t_sin_descuento,
+						'descuento':descuento,
+						'total':total,
+						'usuario':usuario,
+						'inicio':inicio.date(),
+						'final':final.date() - timedelta(days=1),
+						'productos_agrupados':productos_agrupados,
+						'totalPro':productos_agrupados.count(),
+						'produc':produc
+					}
+					html = render_to_string('movimiento/ReportesSalidas.html',dat)
+					return generar_pdf(html)
+				else:
+					#SI ELEJE UN PROVEEDOR Y UN USUARIO
+					if int(id_user) != 0 and int(id_movil) != 0:
+						productos=Salida.objects.filter(Movil_id=int(id_movil),Usuario_id=int(id_user),fecha_salida__range=(inicio,final),estado=True)
+						productos_agrupados = SalidaProducto.objects.filter(Movil_id=int(id_movil),Usuario_id=int(id_user),fecha_registro__range=(inicio,final)).values('producto').annotate(Total=Sum('cantidad'),pago=Sum('total'))
+						produc = Producto.objects.filter(estado=True)
+						proveedor = ''
+						usuario = ''
+						for i in productos:
+							proveedor = i.Movil
+							usuario = i.Usuario
+						# 	t_paquetes = t_paquetes + i.Total_paquetes
+						# 	t_sin_descuento = t_sin_descuento + i.Total_sin_descuento
+						# 	descuento = descuento + i.descuento
+						# 	total = total + i.toto_pago
+
+						dat={
+							'datos':productos,
+							'proveedor':proveedor,
+							'usuario':usuario,
+							'totalR':productos.count(),
+							't_paquetes':t_paquetes,
+							't_sin_descuento':t_sin_descuento,
+							'descuento':descuento,
+							'total':total,
+							'inicio':inicio.date(),
+							'final':final.date() - timedelta(days=1),
+							'productos_agrupados':productos_agrupados,
+							'totalPro':productos_agrupados.count(),
+							'produc':produc
+						}
+						html = render_to_string('movimiento/ReportesSalidas.html',dat)
+						return generar_pdf(html)
+					else:
+						return HttpResponse("Error")
 def NewOrden(request):
 	Usuario=Orden(Usuario=request.user)
 	if request.method == 'POST':
@@ -712,6 +859,8 @@ def buscarCompra(request):
 			Q(id__icontains=texto)
 		)
 		resultados=Orden.objects.filter(busqueda, estado=True).distinct()
+		print resultados
+		
 		return render(request,'movimiento/buscarCompra.html',{'resultados':resultados})
 	else:
 		texto=request.GET["compra"]
@@ -721,7 +870,7 @@ def buscarCompra(request):
 			Q(id__icontains=texto)
 		)
 		resultados=Orden.objects.filter(busqueda, estado=True).distinct()
-		return render(request,'movimiento/buscarCompra.html',{'datos':resultados})
+		return render(request,'movimiento/buscarCompra.html',{'resultados':resultados})
 def buscarSalida(request):
 	if request.method=="POST":
 		texto=request.POST["salida"]
@@ -741,7 +890,7 @@ def buscarSalida(request):
 			Q(id__icontains=texto)
 		)
 		resultados=Salida.objects.filter(busqueda, estado=True).distinct()
-		return render(request,'movimiento/buscarSalida.html',{'datos':resultados})
+		return render(request,'movimiento/buscarSalida.html',{'resultados':resultados})
 def EditarProductosDeCompra(request, id):
 	compra = request.session['sesion']
 	ids_deLACompra = compra[0]
@@ -991,8 +1140,8 @@ def ReporteGeneral(request):
 			
 			produc = Producto.objects.filter(estado=True)
 
-			ingresos_total = IngresoProducto.objects.filter(fecha_registro__range=(inicio,final),estado=True)
-			salidas_total = SalidaProducto.objects.filter(fecha_registro__range=(inicio,final),estado=True)
+			ingresos_total = IngresoProducto.objects.filter(Usuario_id=user,fecha_registro__range=(inicio,final),estado=True)
+			salidas_total = SalidaProducto.objects.filter(Usuario_id=user,fecha_registro__range=(inicio,final),estado=True)
 			
 			cant=0
 			gastos=0
@@ -1022,4 +1171,89 @@ def ReporteGeneral(request):
 			}
 		return render(request,'movimiento/ReporteGeneral.html',dic)
 def InprimirReporteGeneral(request, user,inicio,fin):
-	return HttpResponse("En proceso de creación")
+	if request.method == 'GET':
+		inicio=datetime.strptime(inicio,"%d-%m-%Y")
+		final=datetime.strptime(fin,"%d-%m-%Y")
+		final = final + timedelta(days=1)
+		if str(inicio) > str(final):
+			return HttpResponse("Error: La Fecha Inicio No pueder ser Mayor a la Fecha Final.")
+		
+		if int(user) == 0:
+			ingresos = IngresoProducto.objects.filter(fecha_registro__range=(inicio,final),estado=True).values('producto').annotate(Total=Sum('cantidad'),pago=Sum('total'),Cantidad_ing=Count('producto'))
+			salidas = SalidaProducto.objects.filter(fecha_registro__range=(inicio,final),estado=True).values('producto').annotate(Total=Sum('cantidad'),pago=Sum('total'),Cantidad_sali=Count('producto'))
+			
+			produc = Producto.objects.filter(estado=True)
+
+			ingresos_total = IngresoProducto.objects.filter(fecha_registro__range=(inicio,final),estado=True)
+			salidas_total = SalidaProducto.objects.filter(fecha_registro__range=(inicio,final),estado=True)
+			
+			cant=0
+			gastos=0
+			t_ingresos=0
+			cant_ingresos=0
+			for i in ingresos_total:
+				cant = cant + i.cantidad
+				gastos = gastos + i.total
+
+			ca=0
+			gas=0
+			t_ing=0
+			for i in salidas_total:
+				ca = ca + i.cantidad
+				gas = gas + i.total	
+
+			dic={
+				'ingresos':ingresos,
+				'salidas':salidas,
+				'produc':produc,
+				't_salidas':salidas.count(),
+				't_ingresos':ingresos.count(),
+				'cant':cant,
+				'gastos':gastos,
+				'cant':ca,
+				'gastos':gas,
+				'inicio':inicio.date(),
+				'final':final.date() - timedelta(days=1)
+			}
+			html = render_to_string('movimiento/InprimirReporteGeneral.html',dic)
+			return generar_pdf(html)
+		else:
+			user=int(user)
+			ingresos = IngresoProducto.objects.filter(Usuario_id=user,fecha_registro__range=(inicio,final),estado=True).values('producto').annotate(Total=Sum('cantidad'),pago=Sum('total'),Cantidad_ing=Count('producto'))
+			salidas = SalidaProducto.objects.filter(Usuario_id=user,fecha_registro__range=(inicio,final),estado=True).values('producto').annotate(Total=Sum('cantidad'),pago=Sum('total'),Cantidad_sali=Count('producto'))
+			
+			produc = Producto.objects.filter(estado=True)
+			ingresos_total = IngresoProducto.objects.filter(Usuario_id=user,fecha_registro__range=(inicio,final),estado=True)
+			salidas_total = SalidaProducto.objects.filter(Usuario_id=user,fecha_registro__range=(inicio,final),estado=True)
+			
+			cant=0
+			gastos=0
+			t_ingresos=0
+			cant_ingresos=0
+			for i in ingresos_total:
+				cant = cant + i.cantidad
+				gastos = gastos + i.total
+
+			ca=0
+			gas=0
+			t_ing=0
+			for i in salidas_total:
+				ca = ca + i.cantidad
+				gas = gas + i.total
+
+			dic={
+				'ingresos':ingresos,
+				'salidas':salidas,
+				'produc':produc,
+				't_salidas':salidas.count(),
+				't_ingresos':ingresos.count(),
+				'cant':cant,
+				'gastos':gastos,
+				'cant':ca,
+				'gastos':gas,
+				'usuario':User.objects.get(id=user),
+				'inicio':inicio.date(),
+				'final':final.date() - timedelta(days=1)
+			}
+		html = render_to_string('movimiento/InprimirReporteGeneral.html',dic)
+		return generar_pdf(html)

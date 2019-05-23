@@ -41,8 +41,9 @@ $('#id_username').blur(ejecutar);
     {% csrf_token %}
          {{form|bootstrap_horizontal}}
      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
         <button type="submit" class="btn btn-primary">Registrar</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="reset" class="btn btn-warning">Borrar</button>
     </div>
   </form>
   <p id="valid" style="color:red; text_align:center;"></p>

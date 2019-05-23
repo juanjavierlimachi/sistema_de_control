@@ -22,6 +22,8 @@
             success:function(resp){
                 $("#exampleModal .modal-title").text("");
                 $(".modal-body").html(resp);
+                setTimeout(function(){
+                    $(".modal .close").click(); },3000);
                 $.ajax({
                     type:'GET',
                     url:'/Salida_detalle/'+{{compra}}+'/',

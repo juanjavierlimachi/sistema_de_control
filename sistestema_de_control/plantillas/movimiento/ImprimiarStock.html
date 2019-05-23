@@ -1,46 +1,62 @@
 <meta charset="utf-8">
 <div class="table-responsive">
-<h2 colspan="8" align="center"><strong>INVENTARIO DE PRODUCTOS REGISTRADOS 
-	{% if ids == "4" %} EN BAJA {% endif %} FECHA: {% now 'd /m /Y' %}</strong></h2>
-<table class="table table-hover table-striped table-bordered dt-responsive datatable" border="1" style="font-size: 12px;">
+	<h2 colspan="8" align="center"><strong>INVENTARIO DE PRODUCTOS REGISTRADOS</strong></h2>
+<table class="table table-hover table-striped table-bordered dt-responsive datatable" border=1>
 <thead>
-	<th style="width: 5%;"><br>Nro</th>
-	<th><br>PRODUCTO</th>
-	<th style="width: 8%;"><br>CÓD</th>
-	<th style="width: 16%;"><br>UNIDAD</th>
-	<th style="width: 12%;"><br>VENTA</th>
+	<th style="width: 15%;"><br>Nro</th>
+	<th style="width: 160%;"><br>PRODUCTO</th>
+	<th style="width: 50%;"><br>UNIDAD</th>
+	<th style="width: 60%;"><br>CATEGORIA</th>
+	<th style="width: 45%;"><br>VENTA</th>
 	{% if user.is_superuser %}
-	<th><br>COMPRA</th>
+	<th style="width: 45%;"><br>COMPRA</th>
 	{% endif %}
-	<th><br>CATEGORIA</th>
-	<th style="width: 12%;" align="center"><br>STOCK</th>
-	<th style="width: 12%;"><br>ESTADO</th>
+	<th style="width: 50%;" align="center"><br>STOCK</th>
+	<th style="width: 60%;" align="center"><br>TOTAL Bs.</th>
+	<th style="width: 10%;" align="center"><br>COD</th>
 </thead>
 {% for i in datos %}
 		<tr>
-			<td align="center"><br>{{forloop.counter}}</td>
+			<td align="center"><br>
+					{{forloop.counter}}   
+				</a></td>
 			<td align="center"><br>{{i.Nombre_producto|upper}}</td>
-			<td align="center"><br>{{i.id}}</td>
 			<td align="center"><br>{{i.Unidad|upper}}</td>
+			<td align="center"><br>{{i.Categoria.Nombre_categoria|upper}}</td>
 			<td align="center"><br>{{i.Precio_venta}}</td>
 			{% if user.is_superuser %}
 			<td align="center"><br>{{i.Precio_compra}}</td>
 			{% endif %}
-			<td align="center"><br>{{i.Categoria.Nombre_categoria|upper}}</td>
 			{% if i.Stock <= 10 %}
-			<td align="center"><br>{{i.Stock}}</td>
+			<td style="background-color: #d6a4a4" align="center"><br>{{i.Stock}}</td>
 			{% else %}
-			<td align="center"><br>{{i.Stock}}</td>
-			{% endif %}
-			<td align="center"><br>
-				{% if i.estado %}
-				Alta
+				{% if i.Stock <= 50 %}
+			<td style="background-color:rgba(203,235,6,0.85)" align="center"><br>{{i.Stock}}</td>
 				{% else %}
-				Baja
+					{% if i.Stock > 50 %}
+					<td style="background-color:rgba(68,201,66,0.85)" align="center"><br>{{i.Stock}}</td>
+					{% endif %}
 				{% endif %}
-			</td>
-			
+			{% endif %}
+			<td align="center">{{i.total}}</td>
+			<td align="center">{{i.id}}</td>
 		</tr>
+{% empty %}
+<tr>
+	<td colspan="8" align="center"><h4><br><strong>No hay registros para esta consulta.</strong></h4></td>
+</tr>
 {% endfor %}
+
+<tr>
+	<td colspan="5">
+		<br><strong>Capital Bs. : <strong>{{t_ventas}}</strong></strong>
+		<strong>Inverción Bs. : </strong><strong>{{t_compras}}</strong>
+		<strong>Ganancia Bs. :</strong><strong>{{ganancia}}</strong>	
+	</td>
+	<td align="center"><br><strong>{{stock}}</strong></td>
+	<td align="center"><br><strong>{{t}}</strong></td>
+	<td></td>
+</tr>
+
 </table>
 </div>

@@ -11,8 +11,7 @@
 		<th>REG. POR</th>
 		
 </thead >
-
-{% for i in datos %}
+{% for i in resultados %}
 		<tr>
 			<td>
 				<a href="#" onclick="Salida_detalle({{i.id}})" title="Ir a detalles">
@@ -20,7 +19,7 @@
 				</a>
 			</td>
 			<td align="center">{{i.id}}</td>
-			<td>{{i.fecha_salida|date}}</td>
+			<td>{{i.fecha_salida|date:"l d M Y"}}</td>
 			<td>{{i.Movil.Conductor.get_full_name|upper}}</td>
 			<td> {{i.Movil}}</td>
 			<td>{% if i.Kilometraje %}

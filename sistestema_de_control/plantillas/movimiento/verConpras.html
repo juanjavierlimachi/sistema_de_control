@@ -105,7 +105,7 @@ function errores(){
 <table class="table table-hover table-striped table-bordered dt-responsive datatable" id="table-ingresos">
 <thead  class="success">
 		<th style="width: 3%;">Nro</th>
-		<th style="width: 3%;">CÓDIGO</th>
+		<th style="width: 12%;">CÓD COMPRA</th>
 		<th>RESPONSABLE</th>
 		<th style="width: 6%;">CORTESIA</th>
 		<th>PROVEEDOR</th>
@@ -131,7 +131,7 @@ function errores(){
 				{% endif %}
 			</td>
 			<td>{{i.proveedor|upper}}</td>
-			<td>{{i.fecha_registro|date}}</td>
+			<td>{{i.fecha_registro|date:"l d M Y"}}</td>
 			<td>{{i.Usuario.get_full_name|upper}}</td>
 		</tr>
 	{% empty %}

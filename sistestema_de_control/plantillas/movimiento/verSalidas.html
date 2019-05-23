@@ -32,7 +32,7 @@
 <table class="table table-hover table-striped table-bordered dt-responsive datatable" id="table-ingresos">
 <thead  class="success">
 		<th style="width: 3%;">Nro</th>
-		<th style="width: 3%;">CÓDIGO</th>
+		<th style="width: 12%;">CÓD SALIDA</th>
 		<th>FECHA DE SALIDA</th>
 		<th>CONDUCTOR</th>
 		<th style="width: 3%;">MOVIL</th>
@@ -49,7 +49,7 @@
 				</a>
 			</td>
 			<td align="center">{{i.id}}</td>
-			<td>{{i.fecha_salida|date}}</td>
+			<td>{{i.fecha_salida|date:"l d M Y"}}</td>
 			<td>{{i.Movil.Conductor.get_full_name|upper}}</td>
 			<td> {{i.Movil}}</td>
 			<td>{% if i.Kilometraje %}

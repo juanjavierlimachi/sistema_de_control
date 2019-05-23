@@ -74,7 +74,7 @@ function EliminarCompra(ids){
 		<td colspan="2">REGISTRADO POR: <strong>{{dato.Usuario.get_full_name|upper}}</strong></td>
 	</tr>	
 	<tr>
-		<td colspan="4">FECHA DE COMPRA: <strong>{{dato.fecha_registro|date}}</strong></td>
+		<td colspan="4">FECHA DE COMPRA: <strong>{{dato.fecha_registro|date:"l d M Y"}}</strong></td>
 	</tr>
 	<tr>
 		<td colspan="4">CORTESIA:  <strong>{% if dato.Cortesia %} {{dato.Cortesia}} {% else %} sin cortesia {% endif %}</strong></td>

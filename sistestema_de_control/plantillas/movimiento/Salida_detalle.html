@@ -80,8 +80,8 @@ function EliminarSalida(ids){
 		<td colspan="2">REGISTRADO POR: <strong>{{dato.Usuario.get_full_name|upper}}</strong></td>
 	</tr>	
 	<tr>
-		<td colspan="2">FECHA DE SALIDA: <strong>{{dato.fecha_salida|date}}</strong></td>
-		<td><strong>CÓDIGO: {{dato.id}}</strong></td>
+		<td colspan="2">FECHA DE SALIDA: <strong>{{dato.fecha_salida|date:"l d M Y"}}</strong></td>
+		<td><strong>CÓDIGO DE SALIDA: {{dato.id}}</strong></td>
 		<td colspan="2">KILOMETRAJE: <strong>{% if dato.Kilometraje %}{{dato.Kilometraje}}{% endif %}</strong></td>
 	</tr>
 </table>
@@ -123,6 +123,8 @@ function EliminarSalida(ids){
                   </div>
              </td>
 		</tr>
+{% empty %}
+<tr><td colspan="8" align="center">No hay registros</td></tr>
 {% endfor %}
 <tr>
  <td colspan="3">Total:<strong>{{total}} </strong></td>
