@@ -1,4 +1,4 @@
-
+<meta charset="utf-8">
 <div class="table-responsive">
 <table class="table table-hover table-striped" id="table-ingresos">
 	<tr>
@@ -40,7 +40,9 @@
 		{% endfor %}
 		<tr>
 			<td><strong>Totales</strong></td><td></td>
-			<td><strong>{{i.Total_paquetes}}</strong></td><td><strong>{{i.Total_sin_descuento}}</strong></td>
+			<td><strong>{{i.Total_paquetes}}</strong></td>
+			<td><strong>{{i.Total_sin_descuento}}</strong> Descuento: <strong>{{i.Descuento}} 
+				Total: {{i.toto_pago}}</strong></td>
 		</tr>
 	{% empty %}
 	<tr> <td colspan="4" align="center"><strong>No se encontró registros</strong></td> </tr>
@@ -51,7 +53,7 @@
 <tr> <td><strong>TOTAL COMPRAS: </strong> {{totalR}}</td> </tr>
 <tr><td><strong>TOTAL PAQUETES COMPRADOS: </strong> {{t_paquetes}} </td></tr>
 <tr><td><strong>MONTO SIN DESCUENTO: </strong> {{t_sin_descuento}} </td></tr>
-<tr><td><strong>DESCUENTO DEL 18%: </strong> {{descuento}} </td></tr>
+<tr><td><strong>TOTAL DESCUENTO: </strong> {{descuento}} </td></tr>
 <tr><td><strong>TOTAL A CANCELAR: </strong> {{total}} </td></tr>
 <tr><td><strong>Reporte Generado Por:</strong> {{user.get_full_name}} </td></tr>
 </table>

@@ -29,7 +29,7 @@ $('#id_username').blur(ejecutar);
                 console.log(resp);
                 $('#FormAjax').html(resp);
                 $("#exampleModal .modal-title").text("");
-                $(".modal-body").html("<h2>Registro exitoso</h2>");
+                $(".modal-body").html("<div class='alert alert-success' role='alert'>"+resp+"</div>");
                 DatosUser();
             }
         });

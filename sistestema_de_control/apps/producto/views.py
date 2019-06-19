@@ -125,6 +125,7 @@ def recuperarProveedor(request, id):
 def buscar_producto(request):
 	ids = request.GET['ids']
 	return render(request,'producto/buscar_producto.html',{'ids':int(ids)})
+	
 def buscar_produc_ingreso(request):
 	ids = request.GET['ids']
 	return render(request,'producto/buscar_produc_ingreso.html',{'ids':int(ids)})

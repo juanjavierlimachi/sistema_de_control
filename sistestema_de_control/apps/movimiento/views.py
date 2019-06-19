@@ -18,7 +18,7 @@ def ingresa_productos(request,id, ids):
 	print "id de la compra",int(ids)
 	producto = Producto.objects.get(id=int(id))
 	compra=Orden.objects.get(id=int(ids))
-	print "el el ids del del proveedor:::",compra.proveedor.id
+	print "el el ids del proveedor:::",compra.proveedor.id
 	if request.method == 'POST':
 		trans=IngresoProducto.objects.create(
 					cantidad=int(request.POST['cantidad']),
@@ -35,13 +35,13 @@ def ingresa_productos(request,id, ids):
 		t_sin_descuento = 0
 		descuento = 0
 		total_pago = 0
-
+		des=float(compra.Descuento)
 		for i in compra.ingreso.all():
 			t_Paquetes = i.cantidad + t_Paquetes
 			t_sin_descuento = i.total + t_sin_descuento
-			descuento = t_sin_descuento * 0.18
+			descuento = float(t_sin_descuento) * des
 			total_pago = t_sin_descuento - descuento
-		Orden.objects.filter(id=int(ids)).update(Total_paquetes=t_Paquetes,Total_sin_descuento=t_sin_descuento,descuento=descuento,toto_pago=total_pago)
+		Orden.objects.filter(id=int(ids)).update(Total_paquetes=t_Paquetes,Total_sin_descuento=t_sin_descuento,toto_pago=total_pago)
 		#aki devo agregar todas los ingresos a la compra
 		
 		actual=producto.Stock + int(request.POST['cantidad'])
@@ -908,9 +908,9 @@ def EditarProductosDeCompra(request, id):
 		for i in orden.ingreso.all():
 			t_Paquetes = i.cantidad + t_Paquetes
 			t_sin_descuento = i.total + t_sin_descuento
-			descuento = t_sin_descuento * 0.18
+			descuento = t_sin_descuento * orden.Descuento
 			total_pago = t_sin_descuento - descuento
-		Orden.objects.filter(id=int(ids_deLACompra)).update(Total_paquetes=t_Paquetes,Total_sin_descuento=t_sin_descuento,descuento=descuento,toto_pago=total_pago)
+		Orden.objects.filter(id=int(ids_deLACompra)).update(Total_paquetes=t_Paquetes,Total_sin_descuento=t_sin_descuento,toto_pago=total_pago)
 
 		ant_stock = id_producto.Stock
 		actual=(id_producto.Stock + int(request.POST['cantidad'])) - id_producto.Stock
@@ -996,7 +996,7 @@ def Eliminar_ingreso(request, id):
 		t_sin_descuento = i.total + t_sin_descuento
 		descuento = t_sin_descuento * 0.18
 		total_pago = t_sin_descuento - descuento
-	Orden.objects.filter(id=int(ids_deLACompra)).update(Total_paquetes=t_Paquetes,Total_sin_descuento=t_sin_descuento,descuento=descuento,toto_pago=total_pago)
+	Orden.objects.filter(id=int(ids_deLACompra)).update(Total_paquetes=t_Paquetes,Total_sin_descuento=t_sin_descuento,toto_pago=total_pago)
 	
 	return HttpResponse("Se eliminó la información correctamente")
 def Eliminar_salida(request, id):

@@ -26,13 +26,12 @@ class Orden(models.Model):
 	Cortesia = models.TextField(blank=True, null=True, help_text="Describa las cortesias que se ingreso.")
 	Usuario=models.ForeignKey(User)
 	proveedor=models.ForeignKey(Proveedor)
-
+	Descuento=models.FloatField(help_text="Ingrese el porcentaje del descuento")
 	Total_paquetes = models.IntegerField(blank=True, null=True)
 	Total_sin_descuento = models.FloatField(blank=True, null=True)
 	descuento = models.FloatField(blank=True, null=True)
 	toto_pago = models.FloatField(blank=True, null=True)
 	ingreso = models.ManyToManyField(IngresoProducto, blank=True, null=True)
-
 	fecha_registro=models.DateTimeField(auto_now_add=True)
 	estado=models.BooleanField(default=True)
 	def __unicode__(self):
